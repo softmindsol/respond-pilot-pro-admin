@@ -1,12 +1,4 @@
-import { useMemo } from "react";
-import {
-  Users,
-  DollarSign,
-  TrendingUp,
-  Activity,
-  ArrowUpRight,
-  ArrowDownRight,
-} from "lucide-react";
+import { Users, DollarSign, TrendingUp, Activity } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -22,8 +14,20 @@ import {
   Cell,
 } from "recharts";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { useGetDashboardStatsQuery, useGetRevenueAnalyticsQuery } from "@/store/api/adminApi";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+
+import {
+  useGetDashboardStatsQuery,
+  useGetRevenueAnalyticsQuery,
+} from "@/store/api/adminApi";
+
+import StatCard from "../../components/DashboardComponents/statCards";
 
 // Mock data for development (replace with API data)
 const mockStats = {
@@ -46,56 +50,39 @@ const mockRevenueData = [
 ];
 
 const mockSubscriptionData = [
+  { name: "Free", value: 278, color: "#6b7280" },
   { name: "Basic", value: 400, color: "#FEC36D" },
   { name: "Pro", value: 300, color: "#D78001" },
-  { name: "Enterprise", value: 200, color: "#FF5D02" },
-  { name: "Free", value: 278, color: "#6b7280" },
+  { name: "Pro Plus", value: 200, color: "#FF5D02" },
+  { name: "Top-Notch", value: 200, color: "#07ff3e66" },
 ];
 
-const StatCard = ({ title, value, change, icon: Icon, trend }) => (
-  <Card className="bg-[#1a1818] border-[#2a2828]">
-    <CardContent className="pt-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-400">{title}</p>
-          <h3 className="text-2xl font-bold text-white mt-1">{value}</h3>
-          {change !== undefined && (
-            <div className={`flex items-center mt-1 text-sm ${trend === "up" ? "text-green-500" : "text-red-500"}`}>
-              {trend === "up" ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
-              <span>{change}%</span>
-              <span className="text-gray-500 ml-1">vs last month</span>
-            </div>
-          )}
-        </div>
-        <div className="p-3 bg-gradient-to-r from-[#FEC36D]/20 to-[#D78001]/20 rounded-xl">
-          <Icon className="w-6 h-6 text-[#FEC36D]" />
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
-
 const Dashboard = () => {
-  const { data: statsData, isLoading: statsLoading } = useGetDashboardStatsQuery();
-  const { data: revenueData, isLoading: revenueLoading } = useGetRevenueAnalyticsQuery({ period: "7months" });
+  const { data: statsData, isLoading: statsLoading } =
+    useGetDashboardStatsQuery();
+  const { data: revenueData, isLoading: revenueLoading } =
+    useGetRevenueAnalyticsQuery({ period: "7months" });
 
   // Use API data or fallback to mock data
   const stats = statsData || mockStats;
   const chartData = revenueData?.data || mockRevenueData;
   const subscriptionData = mockSubscriptionData;
 
-  const formatCurrency = (value) => 
-    new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(value);
 
-  const formatNumber = (value) => 
-    new Intl.NumberFormat("en-US").format(value);
+  const formatNumber = (value) => new Intl.NumberFormat("en-US").format(value);
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <p className="text-gray-400">Welcome back! Here's what's happening.</p>
+        <p className="text-light">Welcome back! Here's what's happening.</p>
       </div>
 
       {/* Stats Grid */}
@@ -125,6 +112,7 @@ const Dashboard = () => {
           title="Growth Rate"
           value={`${stats.growthRate}%`}
           icon={TrendingUp}
+          
         />
       </div>
 
@@ -134,14 +122,22 @@ const Dashboard = () => {
         <Card className="lg:col-span-2 bg-[#1a1818] border-[#2a2828]">
           <CardHeader>
             <CardTitle className="text-white">Revenue Overview</CardTitle>
-            <CardDescription className="text-gray-400">Monthly revenue for the current year</CardDescription>
+            <CardDescription className="text-gray-400">
+              Monthly revenue for the current year
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData}>
                   <defs>
-                    <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient
+                      id="revenueGradient"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
                       <stop offset="5%" stopColor="#FEC36D" stopOpacity={0.3} />
                       <stop offset="95%" stopColor="#FEC36D" stopOpacity={0} />
                     </linearGradient>
@@ -150,7 +146,11 @@ const Dashboard = () => {
                   <XAxis dataKey="month" stroke="#6b7280" />
                   <YAxis stroke="#6b7280" />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#1a1818", border: "1px solid #2a2828", borderRadius: "8px" }}
+                    contentStyle={{
+                      backgroundColor: "#1a1818",
+                      border: "1px solid #2a2828",
+                      borderRadius: "8px",
+                    }}
                     labelStyle={{ color: "#fff" }}
                     formatter={(value) => [formatCurrency(value), "Revenue"]}
                   />
@@ -171,7 +171,9 @@ const Dashboard = () => {
         <Card className="bg-[#1a1818] border-[#2a2828]">
           <CardHeader>
             <CardTitle className="text-white">Subscription Plans</CardTitle>
-            <CardDescription className="text-gray-400">Distribution by plan type</CardDescription>
+            <CardDescription className="text-gray-400">
+              Distribution by plan type
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[200px]">
@@ -191,7 +193,11 @@ const Dashboard = () => {
                     ))}
                   </Pie>
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#1a1818", border: "1px solid #2a2828", borderRadius: "8px" }}
+                    contentStyle={{
+                      backgroundColor: "#1a1818",
+                      border: "1px solid #2a2828",
+                      borderRadius: "8px",
+                    }}
                     formatter={(value) => [formatNumber(value), "Users"]}
                   />
                 </PieChart>
@@ -200,7 +206,10 @@ const Dashboard = () => {
             <div className="grid grid-cols-2 gap-2 mt-4">
               {subscriptionData.map((item) => (
                 <div key={item.name} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: item.color }}
+                  />
                   <span className="text-sm text-gray-400">{item.name}</span>
                 </div>
               ))}
@@ -213,7 +222,9 @@ const Dashboard = () => {
       <Card className="bg-[#1a1818] border-[#2a2828]">
         <CardHeader>
           <CardTitle className="text-white">User Growth</CardTitle>
-          <CardDescription className="text-gray-400">New user registrations over time</CardDescription>
+          <CardDescription className="text-gray-400">
+            New user registrations over time
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="h-[250px]">
@@ -223,7 +234,11 @@ const Dashboard = () => {
                 <XAxis dataKey="month" stroke="#6b7280" />
                 <YAxis stroke="#6b7280" />
                 <Tooltip
-                  contentStyle={{ backgroundColor: "#1a1818", border: "1px solid #2a2828", borderRadius: "8px" }}
+                  contentStyle={{
+                    backgroundColor: "#1a1818",
+                    border: "1px solid #2a2828",
+                    borderRadius: "8px",
+                  }}
                   labelStyle={{ color: "#fff" }}
                   formatter={(value) => [formatNumber(value), "Users"]}
                 />

@@ -2,30 +2,25 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 import ErrorPage from "../components/ErrorPage";
-import Dashboard from "../Pages/Dashboard";
 import FallBack from "../components/Loaders/fallBack";
 import PrivateRoute from "../routes/PrivateRoute";
 import PublicRoute from "../routes/PublicRoute";
-import InputOtp from "../Pages/Auth/InputOtp";
-import VerifyOtp from "../Pages/Auth/Signup/VerifyOtp";
 import AdminLayout from "../components/AdminLayout";
-import ForgotPassword from "../Pages/Auth/ForgotPassword";
-import PasswordReset from "../Pages/Auth/PasswordReset";
 
+// Lazy load pages
 const Login = lazy(() => import("../Pages/Auth/Login"));
+const Dashboard = lazy(() => import("../Pages/Dashboard"));
+const Users = lazy(() => import("../Pages/Users"));
+const Payments = lazy(() => import("../Pages/Payments"));
 
 export const router = createBrowserRouter([
-  // -----------------------------------------------
-  // ROOT REDIRECT TO LOGIN
-  // -----------------------------------------------
+  // Root redirect to login
   {
     path: "/",
     element: <Navigate to="/auth/login" replace />,
   },
 
-  // -----------------------------------------------
-  // 1. AUTH ROUTES (/auth/...)
-  // -----------------------------------------------
+  // Auth Routes (Public)
   {
     path: "/auth",
     element: (
@@ -36,17 +31,10 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: "login", element: <Login /> },
-      { path: "forgot-password", element: <ForgotPassword /> },
-      { path: "verify-otp", element: <InputOtp /> },
-      { path: "password-reset", element: <PasswordReset /> },
-      { path: "enter-otp", element: <VerifyOtp /> },
     ],
   },
 
-  // -----------------------------------------------
-  // 2. PROTECTED ROUTES (Private Routes)
-  // -----------------------------------------------
-
+  // Protected Admin Routes
   {
     element: <PrivateRoute />,
     errorElement: <ErrorPage />,
@@ -56,7 +44,27 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "/dashboard",
-            element: <Dashboard />,
+            element: (
+              <Suspense fallback={<FallBack />}>
+                <Dashboard />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/users",
+            element: (
+              <Suspense fallback={<FallBack />}>
+                <Users />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/payments",
+            element: (
+              <Suspense fallback={<FallBack />}>
+                <Payments />
+              </Suspense>
+            ),
           },
         ],
       },

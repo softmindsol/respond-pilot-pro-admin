@@ -50,13 +50,13 @@ const NavItem = ({ item, collapsed, onClick }) => {
       className={`
         flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
         ${isActive 
-          ? "bg-gradient-to-r from-[#FEC36D]/20 to-[#D78001]/20 text-[#FEC36D] border border-[#FEC36D]/30" 
-          : "text-gray-400 hover:text-white hover:bg-[#2a2828]"
+          ? "bg-gradient-to-r from-yellow to-orange text-[#fff]" 
+          : "text-light hover:text-white hover:bg-[#2a2828]"
         }
         ${collapsed ? "justify-center" : ""}
       `}
     >
-      <item.icon className={`w-5 h-5 ${isActive ? "text-[#FEC36D]" : ""}`} />
+      <item.icon className={`w-5 h-5 ${isActive ? "text-[#fff]" : ""}`} />
       {!collapsed && <span className="font-medium">{item.label}</span>}
     </NavLink>
   );
@@ -65,7 +65,7 @@ const NavItem = ({ item, collapsed, onClick }) => {
     return (
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>
-        <TooltipContent side="right" className="bg-[#1a1818] border-[#2a2828] text-white">
+        <TooltipContent side="right" className="bg-white border-[#2a2828] text-dark">
           {item.label}
         </TooltipContent>
       </Tooltip>
@@ -88,10 +88,14 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} px-4 py-5`}>
+      <div
+        className={`flex items-center ${
+          collapsed ? "justify-center" : "justify-between"
+        } px-4 py-5`}
+      >
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-[#FEC36D] to-[#D78001] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-yellow to-orange rounded-md flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-white">Admin Panel</span>
@@ -106,30 +110,45 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
           variant="ghost"
           size="icon"
           onClick={() => setCollapsed?.(!collapsed)}
-          className={`hidden lg:flex text-gray-400 hover:text-white ${collapsed ? "absolute -right-3 top-6 bg-[#1a1818] border border-[#2a2828] rounded-full w-6 h-6 p-0" : ""}`}
+          className={`hidden lg:flex text-light hover:text-black ${
+            collapsed
+              ? "absolute -right-3 top-6 bg-[#1a1818] border border-[#363A42] rounded-full w-6 h-6 p-0"
+              : ""
+          }`}
         >
-          <ChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? "rotate-180" : ""}`} />
+          <ChevronLeft
+            className={`w-4 h-4 transition-transform ${
+              collapsed ? "rotate-180" : ""
+            }`}
+          />
         </Button>
       </div>
 
-      <Separator className="bg-[#2a2828]" />
+      <Separator className="bg-[#363A42]" />
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1">
         {navItems.map((item) => (
-          <NavItem key={item.path} item={item} collapsed={collapsed} onClick={onNavigate} />
+          <NavItem
+            key={item.path}
+            item={item}
+            collapsed={collapsed}
+            onClick={onNavigate}
+          />
         ))}
       </nav>
 
-      <Separator className="bg-[#2a2828]" />
+      <Separator className="bg-[#363A42]" />
 
       {/* User Section */}
-      <div className={`p-4 ${collapsed ? "flex justify-center" : ""}`}>
+      <div className={`p-3 ${collapsed ? "flex justify-center" : ""}`}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button 
-              variant="ghost" 
-              className={`w-full ${collapsed ? "p-0 h-auto" : "justify-start"} text-gray-400 hover:text-white hover:bg-[#2a2828]`}
+            <Button
+              variant="ghost"
+              className={`w-full py-7 ${
+                collapsed ? "p-0 h-auto" : "justify-start"
+              } text-light hover:text-white hover:bg-[#2a2828] h-10`}
             >
               <Avatar className="w-8 h-8">
                 <AvatarImage src={user?.avatar} />
@@ -139,26 +158,30 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
               </Avatar>
               {!collapsed && (
                 <div className="ml-3 text-left">
-                  <p className="text-sm font-medium text-white">{user?.name || "Admin"}</p>
-                  <p className="text-xs text-gray-400">{user?.email || "admin@example.com"}</p>
+                  <p className="text-sm font-medium text-white">
+                    {user?.name || "Admin"}
+                  </p>
+                  <p className="text-xs text-light">
+                    {user?.email || "admin@example.com"}
+                  </p>
                 </div>
               )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            align={collapsed ? "center" : "start"} 
+          <DropdownMenuContent
+            align={collapsed ? "center" : "start"}
             side={collapsed ? "right" : "top"}
-            className="w-56 bg-[#1a1818] border-[#2a2828]"
+            className="w-56 bg-[#1a1818] border-[#363A42]"
           >
-            <DropdownMenuItem className="text-gray-300 focus:text-white focus:bg-[#2a2828]">
-              <Settings className="w-4 h-4 mr-2" /> Settings
+            <DropdownMenuItem className="text-light focus:text-white focus:bg-[#2a2828]">
+              <Settings className="w-4 h-4 mr-2 text-light" /> Settings
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-[#2a2828]" />
-            <DropdownMenuItem 
+            <DropdownMenuSeparator className="bg-[#363A42]" />
+            <DropdownMenuItem
               onClick={handleLogout}
-              className="text-red-500 focus:text-red-400 focus:bg-[#2a2828]"
+              className="text-red focus:text-red-400 focus:bg-[#2a2828]"
             >
-              <LogOut className="w-4 h-4 mr-2" /> Logout
+              <LogOut className="w-4 h-4 mr-2 text-light" /> Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -177,7 +200,7 @@ const AdminLayout = () => {
       {/* Desktop Sidebar */}
       <aside
         className={`
-          hidden lg:flex flex-col bg-[#1a1818] border-r border-[#2a2828] transition-all duration-300 relative
+          hidden lg:flex flex-col bg-[#1a1818] border-r border-[#363A42] transition-all duration-300 relative
           ${collapsed ? "w-[70px]" : "w-[250px]"}
         `}
       >
@@ -214,10 +237,10 @@ const AdminLayout = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-400 hover:text-white relative"
+              className="text-gray-400 hover:text-black relative"
             >
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-[#FEC36D] rounded-full" />
+              <span className="absolute top-1 right-2 w-2 h-2 bg-[#FEC36D] rounded-full" />
             </Button>
 
             <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-[#2a2828]">
@@ -227,7 +250,7 @@ const AdminLayout = () => {
                   {user?.name?.charAt(0) || "A"}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-sm text-gray-300">
+              <span className="text-sm text-light">
                 {user?.name || "Admin"}
               </span>
             </div>

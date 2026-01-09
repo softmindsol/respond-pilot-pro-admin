@@ -54,7 +54,7 @@ export default function Login() {
     <section className="min-h-screen flex items-center justify-center p-4 bg-[#0f0d0d]">
       <Toaster position="top-right" />
 
-      <Card className="w-full max-w-md bg-[#1a1818] border-[#2a2828]">
+      <Card className="w-full max-w-md bg-dark border-[#363A42]">
         <CardHeader className="text-center space-y-2">
           <img className="w-44 mx-auto" src={Logo} alt="Respond_Pilot_Pro" />
           <CardTitle className="text-2xl font-bold text-white">

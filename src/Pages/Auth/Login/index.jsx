@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { loginUser, fetchUserProfile } from "@/store/features/auth/authActions";
+import { Logo } from "../../../assets/svgs";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -52,22 +53,24 @@ export default function Login() {
   return (
     <section className="min-h-screen flex items-center justify-center p-4 bg-[#0f0d0d]">
       <Toaster position="top-right" />
-      
+
       <Card className="w-full max-w-md bg-[#1a1818] border-[#2a2828]">
         <CardHeader className="text-center space-y-2">
-          <div className="mx-auto w-12 h-12 bg-gradient-to-r from-[#FEC36D] to-[#D78001] rounded-xl flex items-center justify-center mb-2">
-            <Shield className="w-6 h-6 text-white" />
-          </div>
-          <CardTitle className="text-2xl font-bold text-white">Admin Login</CardTitle>
+          <img className="w-44 mx-auto" src={Logo} alt="Respond_Pilot_Pro" />
+          <CardTitle className="text-2xl font-bold text-white">
+            Admin Login
+          </CardTitle>
           <CardDescription className="text-gray-400">
             Sign in to access the admin dashboard
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-300">Email</Label>
+              <Label htmlFor="email" className="text-gray-300">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -81,7 +84,9 @@ export default function Login() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-300">Password</Label>
+              <Label htmlFor="password" className="text-gray-300">
+                Password
+              </Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -95,11 +100,17 @@ export default function Login() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password.message}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 

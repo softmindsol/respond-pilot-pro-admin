@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { logout } from "@/store/features/auth/authSlice";
+import { Logo } from "../../assets/svgs";
 
 const navItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -174,7 +175,7 @@ const AdminLayout = () => {
   return (
     <div className="flex h-screen bg-[#0f0d0d]">
       {/* Desktop Sidebar */}
-      <aside 
+      <aside
         className={`
           hidden lg:flex flex-col bg-[#1a1818] border-r border-[#2a2828] transition-all duration-300 relative
           ${collapsed ? "w-[70px]" : "w-[250px]"}
@@ -185,7 +186,10 @@ const AdminLayout = () => {
 
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-[280px] p-0 bg-[#1a1818] border-[#2a2828]">
+        <SheetContent
+          side="left"
+          className="w-[280px] p-0 bg-[#1a1818] border-[#2a2828]"
+        >
           <SidebarContent onNavigate={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
@@ -196,24 +200,26 @@ const AdminLayout = () => {
         <header className="h-16 bg-[#1a1818] border-b border-[#2a2828] flex items-center justify-between px-4 lg:px-6">
           <div className="flex items-center gap-4">
             <Button
-              variant="ghost"
+              variant="outline"
               size="icon"
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden text-gray-400 hover:text-white"
+              className="lg:hidden"
             >
               <Menu className="w-5 h-5" />
             </Button>
-            <h1 className="text-lg font-semibold text-white hidden sm:block">
-              Respond Pilot Pro
-            </h1>
+            <img className="w-32 mx-auto" src={Logo} alt="Respond_Pilot_Pro" />
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-gray-400 hover:text-white relative"
+            >
               <Bell className="w-5 h-5" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-[#FEC36D] rounded-full" />
             </Button>
-            
+
             <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-[#2a2828]">
               <Avatar className="w-8 h-8">
                 <AvatarImage src={user?.avatar} />
@@ -221,7 +227,9 @@ const AdminLayout = () => {
                   {user?.name?.charAt(0) || "A"}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-sm text-gray-300">{user?.name || "Admin"}</span>
+              <span className="text-sm text-gray-300">
+                {user?.name || "Admin"}
+              </span>
             </div>
           </div>
         </header>

@@ -55,6 +55,14 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['Users'],
         }),
+        updateUserTier: builder.mutation({
+            query: ({ userId, tier }) => ({
+                url: 'update-tier',
+                method: 'PUT',
+                body: { userId, tier },
+            }),
+            invalidatesTags: ['Users'],
+        }),
 
         // Payments Management
         getPayments: builder.query({
@@ -99,6 +107,7 @@ export const {
     useUpdateUserMutation,
     useDeleteUserMutation,
     useToggleUserStatusMutation,
+    useUpdateUserTierMutation,
     useGetPaymentsQuery,
     useGetPaymentByIdQuery,
     useRefundPaymentMutation,

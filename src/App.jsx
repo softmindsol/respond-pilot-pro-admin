@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 export default function App() {
   return (
     <>
-      <Toaster position="top-right" />
+      <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
       <Suspense fallback={<FallBack />}>
         <RouterProvider router={router} />
       </Suspense>

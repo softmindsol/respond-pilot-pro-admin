@@ -5,13 +5,13 @@ import { z } from "zod";
 import { Eye, EyeOff, Loader2, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { loginUser, fetchUserProfile } from "@/store/features/auth/authActions";
+import { loginAdmin, fetchUserProfile } from "@/store/features/auth/authActions";
 import { Logo } from "../../../assets/svgs";
 
 const loginSchema = z.object({
@@ -36,9 +36,9 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     try {
-      const result = await dispatch(loginUser(data));
+      const result = await dispatch(loginAdmin(data));
 
-      if (loginUser.fulfilled.match(result)) {
+      if (loginAdmin.fulfilled.match(result)) {
         toast.success("Login successful!");
         await dispatch(fetchUserProfile());
         navigate("/dashboard");
@@ -52,7 +52,7 @@ export default function Login() {
 
   return (
     <section className="min-h-screen flex items-center justify-center p-4 bg-[#0f0d0d]">
-      <Toaster position="top-right" />
+
 
       <Card className="w-full max-w-md bg-dark border-[#363A42]">
         <CardHeader className="text-center space-y-2">

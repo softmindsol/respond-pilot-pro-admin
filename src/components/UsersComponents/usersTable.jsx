@@ -29,8 +29,8 @@ const statusColors = {
 
 const planColors = {
   Free: "outline",
-  Basic: "secondary",
-  Pro: "default",
+  Basic: "default",
+  Pro: "secondary",
   Enterprise: "warning",
 };
 

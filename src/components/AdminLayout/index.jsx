@@ -3,15 +3,14 @@ import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   LayoutDashboard,
-  Users,
-  CreditCard,
   Settings,
   LogOut,
   Menu,
   X,
   ChevronLeft,
-  Shield,
   Bell,
+  CircleDollarSign,
+  UsersRound,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -24,19 +23,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { logout } from "@/store/features/auth/authSlice";
 import { Logo } from "../../assets/svgs";
 
 const navItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/users", label: "Users", icon: Users },
-  { path: "/payments", label: "Payments", icon: CreditCard },
+  { path: "/users", label: "Users", icon: UsersRound },
+  { path: "/payments", label: "Payments", icon: CircleDollarSign },
 ];
 
 const NavItem = ({ item, collapsed, onClick }) => {
@@ -49,9 +48,10 @@ const NavItem = ({ item, collapsed, onClick }) => {
       onClick={onClick}
       className={`
         flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-        ${isActive 
-          ? "bg-gradient-to-r from-yellow to-orange text-[#fff]" 
-          : "text-light hover:text-white hover:bg-[#2a2828]"
+        ${
+          isActive
+            ? "bg-gradient-to-r from-yellow to-orange text-[#fff]"
+            : "text-light hover:text-white hover:bg-[#2a2828]"
         }
         ${collapsed ? "justify-center" : ""}
       `}
@@ -65,7 +65,10 @@ const NavItem = ({ item, collapsed, onClick }) => {
     return (
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>
-        <TooltipContent side="right" className="bg-white border-[#2a2828] text-dark">
+        <TooltipContent
+          side="right"
+          className="bg-white border-[#2a2828] text-dark font-semibold tracking-wide font-arial"
+        >
           {item.label}
         </TooltipContent>
       </Tooltip>
@@ -96,14 +99,14 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
         {!collapsed && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-r from-yellow to-orange rounded-md flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
+              <img src="../public/favicon.svg" alt="rpp" />
             </div>
             <span className="font-bold text-white">Admin Panel</span>
           </div>
         )}
         {collapsed && (
           <div className="w-8 h-8 bg-gradient-to-r from-[#FEC36D] to-[#D78001] rounded-lg flex items-center justify-center">
-            <Shield className="w-5 h-5 text-white" />
+            <img src="../public/favicon.svg" alt="rpp" />
           </div>
         )}
         <Button

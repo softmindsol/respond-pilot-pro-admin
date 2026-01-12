@@ -29,7 +29,6 @@ import {
 
 import StatCard from "../../components/DashboardComponents/statCards";
 
-// Mock data for development (replace with API data)
 const mockStats = {
   totalUsers: 12453,
   totalRevenue: 89420,
@@ -78,11 +77,13 @@ const Dashboard = () => {
   const formatNumber = (value) => new Intl.NumberFormat("en-US").format(value);
 
   return (
-    <div className="space-y-6">
+    <div className="lg:space-y-6 space-y-4">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <p className="text-light">Welcome back! Here's what's happening.</p>
+        <h1 className="md:text-2xl text-xl font-bold text-white">Dashboard</h1>
+        <p className="text-light md:text-base text-sm">
+          Welcome back! Here's what's happening.
+        </p>
       </div>
 
       {/* Stats Grid */}
@@ -112,14 +113,13 @@ const Dashboard = () => {
           title="Growth Rate"
           value={`${stats.growthRate}%`}
           icon={TrendingUp}
-          
         />
       </div>
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Chart */}
-        <Card className="lg:col-span-2 bg-[#1a1818] border-[#2a2828]">
+        <Card className="lg:col-span-2 bg-[#1a1818] border-[#363A42]">
           <CardHeader>
             <CardTitle className="text-white">Revenue Overview</CardTitle>
             <CardDescription className="text-gray-400">
@@ -139,12 +139,12 @@ const Dashboard = () => {
                       y2="1"
                     >
                       <stop offset="5%" stopColor="#FEC36D" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#FEC36D" stopOpacity={0} />
+                      <stop offset="95%" stopColor="#d78001" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#2a2828" />
-                  <XAxis dataKey="month" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" />
+                  <XAxis dataKey="month" stroke="#aab2c7" />
+                  <YAxis stroke="#aab2c7" />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: "#1a1818",
@@ -168,7 +168,7 @@ const Dashboard = () => {
         </Card>
 
         {/* Subscription Distribution */}
-        <Card className="bg-[#1a1818] border-[#2a2828]">
+        <Card className="bg-[#1a1818] border-[#363A42]">
           <CardHeader>
             <CardTitle className="text-white">Subscription Plans</CardTitle>
             <CardDescription className="text-gray-400">
@@ -219,10 +219,12 @@ const Dashboard = () => {
       </div>
 
       {/* User Growth Chart */}
-      <Card className="bg-[#1a1818] border-[#2a2828]">
+      <Card className="bg-[#1a1818] border-[#363A42]">
         <CardHeader>
-          <CardTitle className="text-white">User Growth</CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardTitle className="text-white lg:text-lg text-base">
+            User Growth
+          </CardTitle>
+          <CardDescription className="text-light">
             New user registrations over time
           </CardDescription>
         </CardHeader>

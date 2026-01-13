@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, googleAuthUser, fetchUserProfile } from "./authActions";
+import { loginUser, googleAuthUser, fetchUserProfile, loginAdmin } from "./authActions";
 
 const initialState = {
     user: null,
@@ -104,8 +104,40 @@ const authSlice = createSlice({
                 state.status = "failed";
                 state.error = action.payload;
             });
+
+        // --- Login Admin ---
+        builder
+            .addCase(loginAdmin.pending, (state) => {
+                state.isLoading = true;
+                state.status = "loading";
+                state.error = null;
+            })
+            .addCase(loginAdmin.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.status = "succeeded";
+                // Handle token storage
+                const token =
+                    action.payload.token ||
+                    action.payload.accessToken ||
+                    action.payload.data?.token;
+
+                if (token) {
+                    state.token = token;
+                    localStorage.setItem("token", token);
+                }
+
+                // Sometimes login returns user data too
+                if (action.payload.user) {
+                    state.user = action.payload.user;
+                }
+            })
+            .addCase(loginAdmin.rejected, (state, action) => {
+                state.isLoading = false;
+                state.status = "failed";
+                state.error = action.payload;
+            });
     },
-}); 
+});
 
 export const { logout, clearError } = authSlice.actions;
 export default authSlice.reducer;

@@ -113,6 +113,7 @@ const Dashboard = () => {
           title="Growth Rate"
           value={`${stats.growthRate}%`}
           icon={TrendingUp}
+
         />
       </div>
 
@@ -198,6 +199,7 @@ const Dashboard = () => {
                       border: "1px solid #2a2828",
                       borderRadius: "8px",
                     }}
+                    itemStyle={{ color: "#fff" }}
                     formatter={(value) => [formatNumber(value), "Users"]}
                   />
                 </PieChart>

@@ -114,11 +114,10 @@ const Users = () => {
           <p className="text-gray-400 text-sm">Manage Founding Partners and Affiliates</p>
         </div>
       </div>
-
       {/* Filters */}
-      <Card className="bg-[#1a1818] border-[#2a2828]">
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4">
+      <Card className="bg-[#1a1818] border-[#363A42]">
+        <CardContent>
+          <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input

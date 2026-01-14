@@ -1,12 +1,45 @@
-import { useState, useMemo } from "react";
-import { Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  ShieldCheck,
+  Users as UsersIcon,
+  UserX,
+  UserCheck,
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  User,
+} from "lucide-react";
 import toast from "react-hot-toast";
-import { useGetUsersQuery, useUpdateUserTierMutation } from "@/store/api/adminApi";
+import {
+  useGetUsersQuery,
+  useUpdateUserTierMutation,
+} from "@/store/api/adminApi";
 
+// Shadcn UI Components
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -14,99 +47,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  useGetUsersQuery,
-  useDeleteUserMutation,
-  useToggleUserStatusMutation,
-} from "@/store/api/adminApi";
-import DeleteModal from "../../components/UsersComponents/deleteModal";
-import ViewUserModal from "../../components/UsersComponents/viewUserModal";
-import Pagination from "../../components/Customs/pagination";
-import UsersTable from "../../components/UsersComponents/usersTable";
-
-// Mock data for development
-const mockUsers = [
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "",
-    status: "active",
-    plan: "Pro",
-    createdAt: "2025-01-01",
-    lastLogin: "2025-01-09",
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    email: "jane@example.com",
-    avatar: "",
-    status: "active",
-    plan: "Enterprise",
-    createdAt: "2025-01-02",
-    lastLogin: "2025-01-08",
-  },
-  {
-    id: "3",
-    name: "Mike Johnson",
-    email: "mike@example.com",
-    avatar: "",
-    status: "inactive",
-    plan: "Basic",
-    createdAt: "2024-12-15",
-    lastLogin: "2025-01-05",
-  },
-  {
-    id: "4",
-    name: "Sarah Wilson",
-    email: "sarah@example.com",
-    avatar: "",
-    status: "active",
-    plan: "Pro",
-    createdAt: "2024-11-20",
-    lastLogin: "2025-01-09",
-  },
-  {
-    id: "5",
-    name: "Tom Brown",
-    email: "tom@example.com",
-    avatar: "",
-    status: "suspended",
-    plan: "Basic",
-    createdAt: "2024-10-10",
-    lastLogin: "2024-12-20",
-  },
-  {
-    id: "6",
-    name: "Emily Davis",
-    email: "emily@example.com",
-    avatar: "",
-    status: "active",
-    plan: "Free",
-    createdAt: "2025-01-05",
-    lastLogin: "2025-01-09",
-  },
-  {
-    id: "7",
-    name: "Chris Lee",
-    email: "chris@example.com",
-    avatar: "",
-    status: "active",
-    plan: "Pro",
-    createdAt: "2024-09-15",
-    lastLogin: "2025-01-07",
-  },
-  {
-    id: "8",
-    name: "Anna Martinez",
-    email: "anna@example.com",
-    avatar: "",
-    status: "inactive",
-    plan: "Basic",
-    createdAt: "2024-08-20",
-    lastLogin: "2024-11-15",
-  },
-];
 
 const Users = () => {
   const [search, setSearch] = useState("");
@@ -128,7 +68,7 @@ const Users = () => {
   const { data: usersData, isLoading: loading } = useGetUsersQuery({
     page,
     limit: pageSize,
-    search: debouncedSearch
+    search: debouncedSearch,
   });
 
   const [updateTier] = useUpdateUserTierMutation();
@@ -141,10 +81,10 @@ const Users = () => {
     try {
       await updateTier({ userId, tier: newTier }).unwrap();
 
-      if (newTier === 'tier1') toast.success("User is now a Founding Partner! 🏆");
-      else if (newTier === 'tier2') toast.success("User is now an Affiliate.");
+      if (newTier === "tier1")
+        toast.success("User is now a Founding Partner! 🏆");
+      else if (newTier === "tier2") toast.success("User is now an Affiliate.");
       else toast.success("Status removed.");
-
     } catch (error) {
       console.error(error);
       toast.error(error?.data?.message || "Update failed");
@@ -153,16 +93,33 @@ const Users = () => {
 
   // Helper Functions
   const getInitials = (name) => name?.charAt(0).toUpperCase() || "U";
-  const formatDate = (date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
 
   const getTierBadge = (tier) => {
     switch (tier) {
-      case 'tier1':
-        return <Badge className="bg-orange-500/10 text-orange-500 border-orange-500/20 hover:bg-orange-500/20"><ShieldCheck className="w-3 h-3 mr-1" /> VIP Partner</Badge>;
-      case 'tier2':
-        return <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20"><UsersIcon className="w-3 h-3 mr-1" /> Affiliate</Badge>;
+      case "tier1":
+        return (
+          <Badge className="bg-orange-500/10 text-orange-500 border-orange-500/20 hover:bg-orange-500/20">
+            <ShieldCheck className="w-3 h-3 mr-1" /> VIP Partner
+          </Badge>
+        );
+      case "tier2":
+        return (
+          <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20">
+            <UsersIcon className="w-3 h-3 mr-1" /> Affiliate
+          </Badge>
+        );
       default:
-        return <Badge variant="outline" className="text-gray-500 border-gray-700">User</Badge>;
+        return (
+          <Badge variant="outline" className="text-gray-500 border-gray-700">
+            User
+          </Badge>
+        );
     }
   };
 
@@ -172,7 +129,9 @@ const Users = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white">Users Management</h1>
-          <p className="text-gray-400 text-sm">Manage Founding Partners and Affiliates</p>
+          <p className="text-gray-400 text-sm">
+            Manage Founding Partners and Affiliates
+          </p>
         </div>
       </div>
       {/* Filters */}
@@ -188,29 +147,7 @@ const Users = () => {
                 className="pl-10 bg-[#0f0d0d] border-[#2a2828] text-white focus:border-orange-500"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[150px] py-[23px] px-3.5 bg-[#0f0d0d] border-[#2a2828] hover:border-[#363A42] text-white">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#1a1818] border-[#363A42]">
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-                <SelectItem value="suspended">Suspended</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={planFilter} onValueChange={setPlanFilter}>
-              <SelectTrigger className="w-full sm:w-[150px] py-[23px] px-3.5 bg-[#0f0d0d] border-[#2a2828] hover:border-[#363A42] text-white">
-                <SelectValue placeholder="Plan" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#1a1818] border-[#2a2828]">
-                <SelectItem value="all">All Plans</SelectItem>
-                <SelectItem value="Free">Free</SelectItem>
-                <SelectItem value="Basic">Basic</SelectItem>
-                <SelectItem value="Pro">Pro</SelectItem>
-                <SelectItem value="Enterprise">Enterprise</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* Optional: Add Role Filter later if needed */}
           </div>
         </CardContent>
       </Card>
@@ -223,9 +160,13 @@ const Users = () => {
               <TableRow className="border-[#2a2828] hover:bg-transparent">
                 <TableHead className="text-gray-400">User</TableHead>
                 <TableHead className="text-gray-400">Plan</TableHead>
-                <TableHead className="text-gray-400">Affiliate Status</TableHead>
+                <TableHead className="text-gray-400">
+                  Affiliate Status
+                </TableHead>
                 <TableHead className="text-gray-400">Referred By</TableHead>
-                <TableHead className="text-gray-400 text-right">Actions</TableHead>
+                <TableHead className="text-gray-400 text-right">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -237,13 +178,19 @@ const Users = () => {
                 </TableRow>
               ) : users.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-40 text-center text-gray-500">
+                  <TableCell
+                    colSpan={5}
+                    className="h-40 text-center text-gray-500"
+                  >
                     No users found.
                   </TableCell>
                 </TableRow>
               ) : (
                 users.map((user) => (
-                  <TableRow key={user._id} className="border-[#2a2828] hover:bg-[#1f1d1d]">
+                  <TableRow
+                    key={user._id}
+                    className="border-[#2a2828] hover:bg-[#1f1d1d]"
+                  >
                     {/* 1. User */}
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -254,7 +201,9 @@ const Users = () => {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium text-gray-200">{user.name}</p>
+                          <p className="font-medium text-gray-200">
+                            {user.name}
+                          </p>
                           <p className="text-xs text-gray-500">{user.email}</p>
                         </div>
                       </div>
@@ -262,15 +211,16 @@ const Users = () => {
 
                     {/* 2. Plan */}
                     <TableCell>
-                      <Badge variant="outline" className="border-gray-700 text-gray-300">
+                      <Badge
+                        variant="outline"
+                        className="border-gray-700 text-gray-300"
+                      >
                         {user.plan}
                       </Badge>
                     </TableCell>
 
                     {/* 3. Affiliate Status */}
-                    <TableCell>
-                      {getTierBadge(user.affiliateTier)}
-                    </TableCell>
+                    <TableCell>{getTierBadge(user.affiliateTier)}</TableCell>
 
                     {/* 4. Referred By */}
                     <TableCell className="text-gray-500 text-sm">
@@ -278,40 +228,53 @@ const Users = () => {
                         <span className="bg-[#111] px-2 py-1 rounded border border-[#333] text-xs font-mono">
                           ID: {user.referredBy.slice(-4)}
                         </span>
-                      ) : "-"}
+                      ) : (
+                        "-"
+                      )}
                     </TableCell>
 
                     {/* 5. Actions */}
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white hover:bg-[#2a2828]">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-gray-400 hover:text-white hover:bg-[#2a2828]"
+                          >
                             <MoreVertical className="w-4 h-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-[#1a1818] border-[#2a2828] text-gray-300">
-                          <DropdownMenuLabel>Affiliate Actions</DropdownMenuLabel>
+                        <DropdownMenuContent
+                          align="end"
+                          className="bg-[#1a1818] border-[#2a2828] text-gray-300"
+                        >
+                          <DropdownMenuLabel>
+                            Affiliate Actions
+                          </DropdownMenuLabel>
                           <DropdownMenuSeparator className="bg-[#2a2828]" />
 
                           {/* Make Founding Partner */}
                           <DropdownMenuItem
-                            onClick={() => handleUpdateTier(user._id, 'tier1')}
+                            onClick={() => handleUpdateTier(user._id, "tier1")}
                             className="text-orange-500 focus:text-orange-400 focus:bg-[#2a2828] cursor-pointer"
                           >
-                            <ShieldCheck className="w-4 h-4 mr-2" /> Make Founding Partner
+                            <ShieldCheck className="w-4 h-4 mr-2" /> Make
+                            Founding Partner
                           </DropdownMenuItem>
 
                           {/* Make Standard Affiliate */}
                           <DropdownMenuItem
-                            onClick={() => handleUpdateTier(user._id, 'tier2')}
+                            onClick={() => handleUpdateTier(user._id, "tier2")}
                             className="focus:text-white focus:bg-[#2a2828] cursor-pointer"
                           >
-                            <UsersIcon className="w-4 h-4 mr-2" /> Make Standard Affiliate
+                            <UsersIcon className="w-4 h-4 mr-2" /> Make Standard
+                            Affiliate
                           </DropdownMenuItem>
 
                           {/* Remove Status */}
                           <DropdownMenuItem
-                            onClick={() => handleUpdateTier(user._id, 'none')}
+                            onClick={() => handleUpdateTier(user._id, "none")}
                             className="text-red-500 focus:text-red-400 focus:bg-[#2a2828] cursor-pointer"
                           >
                             <UserX className="w-4 h-4 mr-2" /> Remove Status
@@ -336,7 +299,7 @@ const Users = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage(p => Math.max(1, p - 1))}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
             className="border-[#2a2828] bg-[#1a1818] text-gray-300 hover:bg-[#2a2828]"
           >
@@ -345,7 +308,7 @@ const Users = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             className="border-[#2a2828] bg-[#1a1818] text-gray-300 hover:bg-[#2a2828]"
           >

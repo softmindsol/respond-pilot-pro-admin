@@ -53,6 +53,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import StatCard from "../../components/DashboardComponents/statCards";
 
 // --- CONFIG & MOCK DATA ---
 const API_BASE =
@@ -134,23 +135,6 @@ const statusColors = {
   failed: "destructive",
   refunded: "secondary",
 };
-
-// --- HELPER COMPONENTS ---
-const StatCard = ({ title, value, icon: Icon, color = "text-[#FEC36D]" }) => (
-  <Card className="bg-[#1a1818] border-[#2a2828]">
-    <CardContent className="pt-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-400">{title}</p>
-          <h3 className="text-2xl font-bold text-white mt-1">{value}</h3>
-        </div>
-        <div className="p-3 bg-[#2a2828] rounded-xl">
-          <Icon className={`w-6 h-6 ${color}`} />
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
 
 const Payments = () => {
   // --- STATE: TRANSACTIONS TAB ---
@@ -294,7 +278,7 @@ const Payments = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white">Financials</h1>
-          <p className="text-gray-400">
+          <p className="text-gray">
             Manage Transactions & Affiliate Payouts
           </p>
         </div>
@@ -313,28 +297,23 @@ const Payments = () => {
           title="Total Revenue"
           value={formatCurrency(mockStats.totalRevenue)}
           icon={DollarSign}
-          color="text-green-500"
         />
-        {/* Dynamic Pending Payout Calculation */}
         <StatCard
           title="Pending Payouts"
           value={formatCurrency(
             payouts.reduce((sum, p) => sum + p.walletBalance, 0)
           )}
           icon={Wallet}
-          color="text-red-400"
         />
         <StatCard
           title="Monthly Revenue"
           value={formatCurrency(mockStats.monthlyRevenue)}
           icon={TrendingUp}
-          color="text-blue-400"
         />
         <StatCard
           title="Success Rate"
           value={`${mockStats.successRate}%`}
           icon={CheckCircle}
-          color="text-orange-500"
         />
       </div>
 
@@ -344,17 +323,11 @@ const Payments = () => {
         className="w-full"
         onValueChange={setActiveTab}
       >
-        <TabsList className="bg-[#1a1818] border border-[#2a2828] p-1">
-          <TabsTrigger
-            value="transactions"
-            className="data-[state=active]:bg-[#2a2828]"
-          >
+        <TabsList className="bg-[#0a0a0a] border border-light p-1">
+          <TabsTrigger value="transactions">
             Transactions
           </TabsTrigger>
-          <TabsTrigger
-            value="payouts"
-            className="data-[state=active]:bg-[#2a2828]"
-          >
+          <TabsTrigger value="payouts">
             Affiliate Payouts
           </TabsTrigger>
         </TabsList>
@@ -366,7 +339,7 @@ const Payments = () => {
             <CardContent className="pt-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray" />
                   <Input
                     placeholder="Search payments..."
                     value={search}
@@ -378,7 +351,7 @@ const Payments = () => {
                   <SelectTrigger className="w-full sm:w-[180px] bg-[#0f0d0d] border-[#2a2828] text-white">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#1a1818] border-[#2a2828]">
+                  <SelectContent className="bg-dark border-[#2a2828]">
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>
                     <SelectItem value="pending">Pending</SelectItem>
@@ -394,21 +367,21 @@ const Payments = () => {
           <Card className="bg-[#1a1818] border-[#2a2828]">
             <CardContent className="p-0">
               <Table>
-                <TableHeader className="bg-[#111]">
+                <TableHeader className="bg-dark">
                   <TableRow className="border-[#2a2828] hover:bg-transparent">
-                    <TableHead className="text-gray-400">
+                    <TableHead className="text-gray">
                       Transaction ID
                     </TableHead>
-                    <TableHead className="text-gray-400">User</TableHead>
-                    <TableHead className="text-gray-400">Amount</TableHead>
-                    <TableHead className="text-gray-400">Status</TableHead>
-                    <TableHead className="text-gray-400 hidden md:table-cell">
+                    <TableHead className="text-gray">User</TableHead>
+                    <TableHead className="text-gray">Amount</TableHead>
+                    <TableHead className="text-gray">Status</TableHead>
+                    <TableHead className="text-gray hidden md:table-cell">
                       Plan
                     </TableHead>
-                    <TableHead className="text-gray-400 hidden lg:table-cell">
+                    <TableHead className="text-gray hidden lg:table-cell">
                       Date
                     </TableHead>
-                    <TableHead className="text-gray-400 text-right">
+                    <TableHead className="text-gray text-right">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -416,7 +389,7 @@ const Payments = () => {
                 <TableBody>
                   {filteredPayments.map((payment) => (
                     <TableRow key={payment.id} className="border-[#2a2828]">
-                      <TableCell className="font-mono text-sm text-gray-300">
+                      <TableCell className="font-mono text-sm text-gray">
                         {payment.id}
                       </TableCell>
                       <TableCell>
@@ -424,7 +397,7 @@ const Payments = () => {
                           <p className="font-medium text-white">
                             {payment.user}
                           </p>
-                          <p className="text-sm text-gray-400">
+                          <p className="text-sm text-light">
                             {payment.email}
                           </p>
                         </div>
@@ -440,10 +413,10 @@ const Payments = () => {
                           {payment.status}
                         </Badge>
                       </TableCell>
-                      <TableCell className="hidden md:table-cell text-gray-400">
+                      <TableCell className="hidden md:table-cell text-gray">
                         {payment.plan}
                       </TableCell>
-                      <TableCell className="hidden lg:table-cell text-gray-400">
+                      <TableCell className="hidden lg:table-cell text-gray">
                         {formatDate(payment.createdAt)}
                       </TableCell>
                       <TableCell className="text-right">
@@ -452,7 +425,7 @@ const Payments = () => {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="text-gray-400 hover:text-white"
+                              className="text-gray hover:text-dark"
                             >
                               <MoreVertical className="w-4 h-4" />
                             </Button>
@@ -493,7 +466,7 @@ const Payments = () => {
 
           {/* Pagination for Transactions */}
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray">
               Page {page} of {totalPages}
             </p>
             <div className="flex gap-2">
@@ -526,15 +499,15 @@ const Payments = () => {
               <Table>
                 <TableHeader className="bg-[#111]">
                   <TableRow className="border-[#2a2828] hover:bg-transparent">
-                    <TableHead className="text-gray-400">Partner</TableHead>
-                    <TableHead className="text-gray-400">Tier</TableHead>
-                    <TableHead className="text-gray-400">
+                    <TableHead className="text-gray">Partner</TableHead>
+                    <TableHead className="text-gray">Tier</TableHead>
+                    <TableHead className="text-gray">
                       Referral Code
                     </TableHead>
-                    <TableHead className="text-gray-400">
+                    <TableHead className="text-gray">
                       Unpaid Balance
                     </TableHead>
-                    <TableHead className="text-gray-400 text-right">
+                    <TableHead className="text-gray text-right">
                       Action
                     </TableHead>
                   </TableRow>
@@ -583,7 +556,7 @@ const Payments = () => {
                               : "Standard Affiliate"}
                           </Badge>
                         </TableCell>
-                        <TableCell className="font-mono text-xs text-gray-400">
+                        <TableCell className="font-mono text-xs text-gray">
                           {user.referralCode}
                         </TableCell>
                         <TableCell>
@@ -620,7 +593,7 @@ const Payments = () => {
         <DialogContent className="bg-[#1a1818] border-[#2a2828]">
           <DialogHeader>
             <DialogTitle className="text-white">Refund Payment</DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <DialogDescription className="text-gray">
               Are you sure you want to refund{" "}
               {formatCurrency(selectedPayment?.amount || 0)} to{" "}
               {selectedPayment?.user}?
@@ -657,11 +630,11 @@ const Payments = () => {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-400">Transaction ID</p>
+                  <p className="text-sm text-gray">Transaction ID</p>
                   <p className="text-white font-mono">{selectedPayment.id}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Status</p>
+                  <p className="text-sm text-gray">Status</p>
                   <Badge
                     variant={statusColors[selectedPayment.status]}
                     className="capitalize mt-1"
@@ -670,31 +643,31 @@ const Payments = () => {
                   </Badge>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">User</p>
+                  <p className="text-sm text-gray">User</p>
                   <p className="text-white">{selectedPayment.user}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Email</p>
+                  <p className="text-sm text-gray">Email</p>
                   <p className="text-white">{selectedPayment.email}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Amount</p>
+                  <p className="text-sm text-gray">Amount</p>
                   <p className="text-white text-xl font-bold">
                     {formatCurrency(selectedPayment.amount)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Plan</p>
+                  <p className="text-sm text-gray">Plan</p>
                   <p className="text-white">{selectedPayment.plan}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Method</p>
+                  <p className="text-sm text-gray">Method</p>
                   <p className="text-white capitalize">
                     {selectedPayment.method}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Date</p>
+                  <p className="text-sm text-gray">Date</p>
                   <p className="text-white">
                     {formatDate(selectedPayment.createdAt)}
                   </p>

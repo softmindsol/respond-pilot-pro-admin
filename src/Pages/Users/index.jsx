@@ -40,13 +40,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 const Users = () => {
   const [search, setSearch] = useState("");
@@ -104,19 +97,22 @@ const Users = () => {
     switch (tier) {
       case "tier1":
         return (
-          <Badge className="bg-orange-500/10 text-orange-500 border-orange-500/20 hover:bg-orange-500/20">
-            <ShieldCheck className="w-3 h-3 mr-1" /> VIP Partner
+          <Badge className="bg-orange-500/10 text-orange border-orange/40 hover:bg-orange-500/20">
+            <ShieldCheck className="w-3 h-3 mr-0.5" /> VIP Partner
           </Badge>
         );
       case "tier2":
         return (
           <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20">
-            <UsersIcon className="w-3 h-3 mr-1" /> Affiliate
+            <UsersIcon className="w-3 h-3 mr-0.5" /> Affiliate
           </Badge>
         );
       default:
         return (
-          <Badge variant="outline" className="text-gray-500 border-gray-700">
+          <Badge
+            variant="outline"
+            className="text-light border-gray-600 bg-accent/4"
+          >
             User
           </Badge>
         );
@@ -124,7 +120,7 @@ const Users = () => {
   };
 
   return (
-    <div className="space-y-6 p-6 bg-[#0f0d0d] min-h-screen text-white">
+    <div className="space-y-6 bg-[#0f0d0d] min-h-screen text-white">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -156,31 +152,27 @@ const Users = () => {
       <Card className="bg-[#1a1818] border-[#2a2828] overflow-hidden">
         <CardContent className="p-0">
           <Table>
-            <TableHeader className="bg-[#111]">
+            <TableHeader className="bg-dark">
               <TableRow className="border-[#2a2828] hover:bg-transparent">
-                <TableHead className="text-gray-400">User</TableHead>
-                <TableHead className="text-gray-400">Plan</TableHead>
-                <TableHead className="text-gray-400">
-                  Affiliate Status
-                </TableHead>
-                <TableHead className="text-gray-400">Referred By</TableHead>
-                <TableHead className="text-gray-400 text-right">
-                  Actions
-                </TableHead>
+                <TableHead className="text-gray">User</TableHead>
+                <TableHead className="text-gray">Plan</TableHead>
+                <TableHead className="text-gray">Affiliate Status</TableHead>
+                <TableHead className="text-gray">Referred By</TableHead>
+                <TableHead className="text-gray text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={5} className="h-64 text-center">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-orange-500" />
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-orange" />
                   </TableCell>
                 </TableRow>
               ) : users.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={5}
-                    className="h-40 text-center text-gray-500"
+                    className="h-40 text-center text-light"
                   >
                     No users found.
                   </TableCell>
@@ -196,7 +188,7 @@ const Users = () => {
                       <div className="flex items-center gap-3">
                         <Avatar className="w-9 h-9 border border-[#333]">
                           <AvatarImage src={user.profileImage} />
-                          <AvatarFallback className="bg-gradient-to-r from-gray-700 to-gray-600 text-white text-xs">
+                          <AvatarFallback className="bg-gradient-to-r from-yellow to-orange text-white text-xs">
                             {getInitials(user.name)}
                           </AvatarFallback>
                         </Avatar>
@@ -213,7 +205,7 @@ const Users = () => {
                     <TableCell>
                       <Badge
                         variant="outline"
-                        className="border-gray-700 text-gray-300"
+                        className="border-gray text-gray bg-accent/5"
                       >
                         {user.plan}
                       </Badge>
@@ -240,7 +232,7 @@ const Users = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="text-gray-400 hover:text-white hover:bg-[#2a2828]"
+                            className="text-gray hover:text-white hover:bg-[#2a2828]"
                           >
                             <MoreVertical className="w-4 h-4" />
                           </Button>

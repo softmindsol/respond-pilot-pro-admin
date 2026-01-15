@@ -42,14 +42,14 @@ export const router = createBrowserRouter([
       {
         element: <AdminLayout />,
         children: [
-          {
-            path: "/dashboard",
-            element: (
-              <Suspense fallback={<FallBack />}>
-                <Dashboard />
-              </Suspense>
-            ),
-          },
+          // {
+          //   path: "/dashboard",
+          //   element: (
+          //     <Suspense fallback={<FallBack />}>
+          //       <Dashboard />
+          //     </Suspense>
+          //   ),
+          // },
           {
             path: "/users",
             element: (

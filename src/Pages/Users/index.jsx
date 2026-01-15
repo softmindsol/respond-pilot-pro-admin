@@ -12,16 +12,11 @@ import {
   Loader2,
   User,
 } from "lucide-react";
-import toast from "react-hot-toast";
-import {
-  useGetUsersQuery,
-  useUpdateUserTierMutation,
-} from "@/store/api/adminApi";
-
-// Shadcn UI Components
+import { Badge } from "@/components/ui/badge";
+import { useUsersTable } from "@/hooks/useUsersTable";
+import { getInitials, formatDate } from "@/utils/formatters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -49,53 +44,25 @@ import {
 } from "@/components/ui/select";
 
 
-
 const Users = () => {
-  const [search, setSearch] = useState("");
-  // Debounce search input
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const pageSize = 10;
-
-  // Debounce effect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search);
-      setPage(1); // Reset to page 1 on new search
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  // RTK Query Hooks
-  const { data: usersData, isLoading: loading } = useGetUsersQuery({
+  const {
+    search,
+    setSearch,
     page,
-    limit: pageSize,
-    search: debouncedSearch,
-  });
-
-  const [updateTier] = useUpdateUserTierMutation();
-
-  const users = usersData?.users || [];
-  const totalPages = usersData?.pages || 1;
-
-  // --- Update Affiliate Tier Handler ---
-  const handleUpdateTier = async (userId, newTier) => {
-    try {
-      await updateTier({ userId, tier: newTier }).unwrap();
-
-      if (newTier === "tier1")
-        toast.success("User is now a Founding Partner! 🏆");
-      else if (newTier === "tier2") toast.success("User is now an Affiliate.");
-      else toast.success("Status removed.");
-    } catch (error) {
-      console.error(error);
-      toast.error(error?.data?.message || "Update failed");
-    }
-  };
+    setPage,
+    users,
+    totalPages,
+    loadingUsers: loading,
+    handleUpdateTier,
+    planFilter,
+    setPlanFilter,
+    statusFilter,
+    setStatusFilter
+  } = useUsersTable();
 
   // Helper Functions
-  const getInitials = (name) => name?.charAt(0).toUpperCase() || "U";
-  const formatDate = (date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+
 
   const getTierBadge = (tier) => {
     switch (tier) {
@@ -142,7 +109,31 @@ const Users = () => {
                 className="pl-10 bg-[#0f0d0d] border-[#2a2828] text-white focus:border-orange-500"
               />
             </div>
-            {/* Optional: Add Role Filter later if needed */}
+            {/* Filters: Plan & Status */}
+            <Select value={planFilter} onValueChange={setPlanFilter}>
+              <SelectTrigger className="w-full lg:w-[180px] bg-[#0f0d0d] border-[#2a2828] text-white">
+                <SelectValue placeholder="Filter by Plan" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#1a1818] border-[#2a2828]">
+                <SelectItem value="all">All Plans</SelectItem>
+                <SelectItem value="Free">Free</SelectItem>
+                <SelectItem value="Basic">Basic</SelectItem>
+                <SelectItem value="Pro">Pro</SelectItem>
+                <SelectItem value="PRO_PLUS">PRO_PLUS</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full lg:w-[180px] bg-[#0f0d0d] border-[#2a2828] text-white">
+                <SelectValue placeholder="Affiliate Status" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#1a1818] border-[#2a2828]">
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="tier1">VIP Partner (Tier 1)</SelectItem>
+                <SelectItem value="tier2">Affiliate (Tier 2)</SelectItem>
+                <SelectItem value="none">Regular User</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>

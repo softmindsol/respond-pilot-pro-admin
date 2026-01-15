@@ -41,7 +41,7 @@ export default function Login() {
       if (loginAdmin.fulfilled.match(result)) {
         toast.success("Login successful!");
         await dispatch(fetchUserProfile());
-        navigate("/dashboard");
+        navigate("/users");
       } else {
         throw result.payload || { message: "Login failed" };
       }

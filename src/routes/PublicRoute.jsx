@@ -4,7 +4,7 @@ import { Navigate, Outlet } from "react-router-dom";
 const PublicRoute = () => {
   const { token } = useSelector((state) => state.auth);
   if (token) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/users" replace />;
   }
 
   return <Outlet />;

@@ -237,7 +237,6 @@ const Payments = () => {
           <TabsTrigger value="payouts" className="data-[state=active]:bg-[#2a2828]">Affiliate Payouts</TabsTrigger>
         </TabsList>
 
-        {/* ----------------- TAB 1: TRANSACTIONS (Your Existing Logic) ----------------- */}
         <TabsContent value="transactions" className="mt-6 space-y-6">
             {/* Filters */}
             <Card className="bg-[#1a1818] border-[#2a2828]">

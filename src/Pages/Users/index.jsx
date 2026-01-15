@@ -10,15 +10,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader2,
-  User
+  User,
 } from "lucide-react";
-import toast from "react-hot-toast";
-import { useGetUsersQuery, useUpdateUserTierMutation } from "@/store/api/adminApi";
-
-// Shadcn UI Components
+import { Badge } from "@/components/ui/badge";
+import { useUsersTable } from "@/hooks/useUsersTable";
+import { getInitials, formatDate } from "@/utils/formatters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -46,62 +44,46 @@ import {
 } from "@/components/ui/select";
 
 
-
 const Users = () => {
-  const [search, setSearch] = useState("");
-  // Debounce search input
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const pageSize = 10;
-
-  // Debounce effect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search);
-      setPage(1); // Reset to page 1 on new search
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  // RTK Query Hooks
-  const { data: usersData, isLoading: loading } = useGetUsersQuery({
+  const {
+    search,
+    setSearch,
     page,
-    limit: pageSize,
-    search: debouncedSearch
-  });
-
-  const [updateTier] = useUpdateUserTierMutation();
-
-  const users = usersData?.users || [];
-  const totalPages = usersData?.pages || 1;
-
-  // --- Update Affiliate Tier Handler ---
-  const handleUpdateTier = async (userId, newTier) => {
-    try {
-      await updateTier({ userId, tier: newTier }).unwrap();
-
-      if (newTier === 'tier1') toast.success("User is now a Founding Partner! 🏆");
-      else if (newTier === 'tier2') toast.success("User is now an Affiliate.");
-      else toast.success("Status removed.");
-
-    } catch (error) {
-      console.error(error);
-      toast.error(error?.data?.message || "Update failed");
-    }
-  };
+    setPage,
+    users,
+    totalPages,
+    loadingUsers: loading,
+    handleUpdateTier,
+    planFilter,
+    setPlanFilter,
+    statusFilter,
+    setStatusFilter
+  } = useUsersTable();
 
   // Helper Functions
-  const getInitials = (name) => name?.charAt(0).toUpperCase() || "U";
-  const formatDate = (date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+
 
   const getTierBadge = (tier) => {
     switch (tier) {
-      case 'tier1':
-        return <Badge className="bg-orange-500/10 text-orange-500 border-orange-500/20 hover:bg-orange-500/20"><ShieldCheck className="w-3 h-3 mr-1" /> VIP Partner</Badge>;
-      case 'tier2':
-        return <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20"><UsersIcon className="w-3 h-3 mr-1" /> Affiliate</Badge>;
+      case "tier1":
+        return (
+          <Badge className="bg-orange-500/10 text-orange-500 border-orange-500/20 hover:bg-orange-500/20">
+            <ShieldCheck className="w-3 h-3 mr-1" /> VIP Partner
+          </Badge>
+        );
+      case "tier2":
+        return (
+          <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20">
+            <UsersIcon className="w-3 h-3 mr-1" /> Affiliate
+          </Badge>
+        );
       default:
-        return <Badge variant="outline" className="text-gray-500 border-gray-700">User</Badge>;
+        return (
+          <Badge variant="outline" className="text-gray-500 border-gray-700">
+            User
+          </Badge>
+        );
     }
   };
 
@@ -114,11 +96,10 @@ const Users = () => {
           <p className="text-gray-400 text-sm">Manage Founding Partners and Affiliates</p>
         </div>
       </div>
-
       {/* Filters */}
-      <Card className="bg-[#1a1818] border-[#2a2828]">
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4">
+      <Card className="bg-[#1a1818] border-[#363A42]">
+        <CardContent>
+          <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
@@ -128,7 +109,31 @@ const Users = () => {
                 className="pl-10 bg-[#0f0d0d] border-[#2a2828] text-white focus:border-orange-500"
               />
             </div>
-            {/* Optional: Add Role Filter later if needed */}
+            {/* Filters: Plan & Status */}
+            <Select value={planFilter} onValueChange={setPlanFilter}>
+              <SelectTrigger className="w-full lg:w-[180px] bg-[#0f0d0d] border-[#2a2828] text-white">
+                <SelectValue placeholder="Filter by Plan" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#1a1818] border-[#2a2828]">
+                <SelectItem value="all">All Plans</SelectItem>
+                <SelectItem value="Free">Free</SelectItem>
+                <SelectItem value="Basic">Basic</SelectItem>
+                <SelectItem value="Pro">Pro</SelectItem>
+                <SelectItem value="PRO_PLUS">PRO_PLUS</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full lg:w-[180px] bg-[#0f0d0d] border-[#2a2828] text-white">
+                <SelectValue placeholder="Affiliate Status" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#1a1818] border-[#2a2828]">
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="tier1">VIP Partner (Tier 1)</SelectItem>
+                <SelectItem value="tier2">Affiliate (Tier 2)</SelectItem>
+                <SelectItem value="none">Regular User</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
@@ -141,9 +146,13 @@ const Users = () => {
               <TableRow className="border-[#2a2828] hover:bg-transparent">
                 <TableHead className="text-gray-400">User</TableHead>
                 <TableHead className="text-gray-400">Plan</TableHead>
-                <TableHead className="text-gray-400">Affiliate Status</TableHead>
+                <TableHead className="text-gray-400">
+                  Affiliate Status
+                </TableHead>
                 <TableHead className="text-gray-400">Referred By</TableHead>
-                <TableHead className="text-gray-400 text-right">Actions</TableHead>
+                <TableHead className="text-gray-400 text-right">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -155,13 +164,19 @@ const Users = () => {
                 </TableRow>
               ) : users.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-40 text-center text-gray-500">
+                  <TableCell
+                    colSpan={5}
+                    className="h-40 text-center text-gray-500"
+                  >
                     No users found.
                   </TableCell>
                 </TableRow>
               ) : (
                 users.map((user) => (
-                  <TableRow key={user._id} className="border-[#2a2828] hover:bg-[#1f1d1d]">
+                  <TableRow
+                    key={user._id}
+                    className="border-[#2a2828] hover:bg-[#1f1d1d]"
+                  >
                     {/* 1. User */}
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -172,7 +187,9 @@ const Users = () => {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium text-gray-200">{user.name}</p>
+                          <p className="font-medium text-gray-200">
+                            {user.name}
+                          </p>
                           <p className="text-xs text-gray-500">{user.email}</p>
                         </div>
                       </div>
@@ -180,15 +197,16 @@ const Users = () => {
 
                     {/* 2. Plan */}
                     <TableCell>
-                      <Badge variant="outline" className="border-gray-700 text-gray-300">
+                      <Badge
+                        variant="outline"
+                        className="border-gray-700 text-gray-300"
+                      >
                         {user.plan}
                       </Badge>
                     </TableCell>
 
                     {/* 3. Affiliate Status */}
-                    <TableCell>
-                      {getTierBadge(user.affiliateTier)}
-                    </TableCell>
+                    <TableCell>{getTierBadge(user.affiliateTier)}</TableCell>
 
                     {/* 4. Referred By */}
                     <TableCell className="text-gray-500 text-sm">
@@ -196,40 +214,53 @@ const Users = () => {
                         <span className="bg-[#111] px-2 py-1 rounded border border-[#333] text-xs font-mono">
                           ID: {user.referredBy.slice(-4)}
                         </span>
-                      ) : "-"}
+                      ) : (
+                        "-"
+                      )}
                     </TableCell>
 
                     {/* 5. Actions */}
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white hover:bg-[#2a2828]">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-gray-400 hover:text-white hover:bg-[#2a2828]"
+                          >
                             <MoreVertical className="w-4 h-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-[#1a1818] border-[#2a2828] text-gray-300">
-                          <DropdownMenuLabel>Affiliate Actions</DropdownMenuLabel>
+                        <DropdownMenuContent
+                          align="end"
+                          className="bg-[#1a1818] border-[#2a2828] text-gray-300"
+                        >
+                          <DropdownMenuLabel>
+                            Affiliate Actions
+                          </DropdownMenuLabel>
                           <DropdownMenuSeparator className="bg-[#2a2828]" />
 
                           {/* Make Founding Partner */}
                           <DropdownMenuItem
-                            onClick={() => handleUpdateTier(user._id, 'tier1')}
+                            onClick={() => handleUpdateTier(user._id, "tier1")}
                             className="text-orange-500 focus:text-orange-400 focus:bg-[#2a2828] cursor-pointer"
                           >
-                            <ShieldCheck className="w-4 h-4 mr-2" /> Make Founding Partner
+                            <ShieldCheck className="w-4 h-4 mr-2" /> Make
+                            Founding Partner
                           </DropdownMenuItem>
 
                           {/* Make Standard Affiliate */}
                           <DropdownMenuItem
-                            onClick={() => handleUpdateTier(user._id, 'tier2')}
+                            onClick={() => handleUpdateTier(user._id, "tier2")}
                             className="focus:text-white focus:bg-[#2a2828] cursor-pointer"
                           >
-                            <UsersIcon className="w-4 h-4 mr-2" /> Make Standard Affiliate
+                            <UsersIcon className="w-4 h-4 mr-2" /> Make Standard
+                            Affiliate
                           </DropdownMenuItem>
 
                           {/* Remove Status */}
                           <DropdownMenuItem
-                            onClick={() => handleUpdateTier(user._id, 'none')}
+                            onClick={() => handleUpdateTier(user._id, "none")}
                             className="text-red-500 focus:text-red-400 focus:bg-[#2a2828] cursor-pointer"
                           >
                             <UserX className="w-4 h-4 mr-2" /> Remove Status
@@ -254,7 +285,7 @@ const Users = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage(p => Math.max(1, p - 1))}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
             className="border-[#2a2828] bg-[#1a1818] text-gray-300 hover:bg-[#2a2828]"
           >
@@ -263,7 +294,7 @@ const Users = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             className="border-[#2a2828] bg-[#1a1818] text-gray-300 hover:bg-[#2a2828]"
           >

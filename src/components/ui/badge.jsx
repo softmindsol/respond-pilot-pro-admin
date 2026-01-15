@@ -9,24 +9,24 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+          "border-transparent bg-[#6f097a] text-primary-foreground [a&]:hover:bg-primary/90",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+          "border-transparent bg-[#1e86e899] text-white [a&]:hover:bg-secondary/90",
+        tertiary:
+          "border-transparent bg-light/50 text-white font-semibold",
         destructive:
-          "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "border-transparent bg-red/50 text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-        success:
-          "border-transparent bg-green-500/20 text-green-500",
-        warning:
-          "border-transparent bg-yellow-500/20 text-yellow-500",
+          "text-white [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+        success: "border-transparent bg-green-500/20 text-green-500",
+        warning: "border-transparent bg-yellow-500/20 text-yellow-500",
       },
     },
     defaultVariants: {
       variant: "default",
     },
   }
-)
+);
 
 function Badge({ className, variant, asChild = false, ...props }) {
   const Comp = asChild ? Slot : "span"

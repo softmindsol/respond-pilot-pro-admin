@@ -1,11 +1,8 @@
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 const StatCard = ({ title, value, change, icon: Icon, trend }) => (
-  <Card className="bg-[#1a1818] border-[#2a2828]">
+  <Card className="bg-[#1a1818] border-[#363A42] hover:shadow-[0_0_20px] transition-shadow hover:shadow-yellow/35">
     <CardContent className="">
       <div className="flex items-center justify-between">
         <div>

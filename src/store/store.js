@@ -5,6 +5,8 @@ import { subscriptionApi } from './api/subscriptionApi';
 import { adminApi } from './api/adminApi';
 import authReducer from './features/auth/authSlice';
 import youtubeReducer from './features/youtube/youtubeSlice';
+import paymentsReducer from './features/payments/paymentSlice';
+import usersReducer from './features/users/userSlice';
 
 export const store = configureStore({
     reducer: {
@@ -13,10 +15,12 @@ export const store = configureStore({
         [adminApi.reducerPath]: adminApi.reducer,
         auth: authReducer,
         youtube: youtubeReducer,
+        payments: paymentsReducer,
+        users: usersReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(
-            authApi.middleware, 
+            authApi.middleware,
             subscriptionApi.middleware,
             adminApi.middleware
         ),

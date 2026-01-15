@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Search,
   Download,
@@ -18,10 +19,12 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -58,6 +61,66 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 const mockPayments = [
+  {
+    id: "PAY-001",
+    user: "John Doe",
+    email: "john@example.com",
+    amount: 29.99,
+    status: "completed",
+    plan: "Pro",
+    method: "card",
+    createdAt: "2025-01-09T10:30:00",
+  },
+  {
+    id: "PAY-002",
+    user: "Jane Smith",
+    email: "jane@example.com",
+    amount: 99.99,
+    status: "completed",
+    plan: "Enterprise",
+    method: "card",
+    createdAt: "2025-01-09T09:15:00",
+  },
+  {
+    id: "PAY-003",
+    user: "Mike Johnson",
+    email: "mike@example.com",
+    amount: 9.99,
+    status: "pending",
+    plan: "Basic",
+    method: "paypal",
+    createdAt: "2025-01-08T14:20:00",
+  },
+  {
+    id: "PAY-004",
+    user: "Sarah Wilson",
+    email: "sarah@example.com",
+    amount: 29.99,
+    status: "completed",
+    plan: "Pro",
+    method: "card",
+    createdAt: "2025-01-08T11:45:00",
+  },
+  {
+    id: "PAY-005",
+    user: "Tom Brown",
+    email: "tom@example.com",
+    amount: 9.99,
+    status: "failed",
+    plan: "Basic",
+    method: "card",
+    createdAt: "2025-01-07T16:30:00",
+  },
+  {
+    id: "PAY-006",
+    user: "Emily Davis",
+    email: "emily@example.com",
+    amount: 29.99,
+    status: "refunded",
+    plan: "Pro",
+    method: "card",
+    createdAt: "2025-01-07T08:00:00",
+  },
   { id: "PAY-001", user: "John Doe", email: "john@example.com", amount: 29.99, status: "completed", plan: "Pro", method: "card", createdAt: "2025-01-09T10:30:00" },
   { id: "PAY-002", user: "Jane Smith", email: "jane@example.com", amount: 99.99, status: "completed", plan: "Enterprise", method: "card", createdAt: "2025-01-09T09:15:00" },
   { id: "PAY-003", user: "Mike Johnson", email: "mike@example.com", amount: 9.99, status: "pending", plan: "Basic", method: "paypal", createdAt: "2025-01-08T14:20:00" },
@@ -82,6 +145,8 @@ const statusColors = {
 
 // --- HELPER COMPONENTS ---
 const StatCard = ({ title, value, icon: Icon, color = "text-[#FEC36D]" }) => (
+// --- HELPER COMPONENTS ---
+const StatCard = ({ title, value, icon: Icon, color = "text-[#FEC36D]" }) => (
   <Card className="bg-[#1a1818] border-[#2a2828]">
     <CardContent className="pt-6">
       <div className="flex items-center justify-between">
@@ -91,6 +156,8 @@ const StatCard = ({ title, value, icon: Icon, color = "text-[#FEC36D]" }) => (
         </div>
         <div className="p-3 bg-[#2a2828] rounded-xl">
           <Icon className={`w-6 h-6 ${color}`} />
+        <div className="p-3 bg-[#2a2828] rounded-xl">
+          <Icon className={`w-6 h-6 ${color}`} />
         </div>
       </div>
     </CardContent>
@@ -98,6 +165,8 @@ const StatCard = ({ title, value, icon: Icon, color = "text-[#FEC36D]" }) => (
 );
 
 const Payments = () => {
+  // --- STATE: TRANSACTIONS TAB ---
+  const [activeTab, setActiveTab] = useState("transactions");
   // --- STATE: TRANSACTIONS TAB ---
   const [activeTab, setActiveTab] = useState("transactions");
   const [search, setSearch] = useState("");
@@ -116,7 +185,9 @@ const Payments = () => {
   const token = localStorage.getItem("token");
   const pageSize = 10;
   const totalPages = Math.ceil(mockPayments.length / pageSize);
+  const totalPages = Math.ceil(mockPayments.length / pageSize);
 
+  // --- LOGIC: TRANSACTIONS FILTERING ---
   // --- LOGIC: TRANSACTIONS FILTERING ---
   const filteredPayments = useMemo(() => {
     let result = mockPayments;
@@ -132,7 +203,9 @@ const Payments = () => {
     }
     return result;
   }, [search, statusFilter]);
+  }, [search, statusFilter]);
 
+  // --- LOGIC: TRANSACTION ACTIONS ---
   // --- LOGIC: TRANSACTION ACTIONS ---
   const handleRefund = async () => {
     if (!selectedPayment) return;
@@ -150,6 +223,27 @@ const Payments = () => {
     const headers = ["ID", "User", "Email", "Amount", "Status", "Plan", "Method", "Date"];
     const rows = filteredPayments.map(p => [p.id, p.user, p.email, p.amount, p.status, p.plan, p.method, p.createdAt]);
     const csv = [headers, ...rows].map(row => row.join(",")).join("\n");
+    const headers = [
+      "ID",
+      "User",
+      "Email",
+      "Amount",
+      "Status",
+      "Plan",
+      "Method",
+      "Date",
+    ];
+    const rows = filteredPayments.map((p) => [
+      p.id,
+      p.user,
+      p.email,
+      p.amount,
+      p.status,
+      p.plan,
+      p.method,
+      p.createdAt,
+    ]);
+    const csv = [headers, ...rows].map((row) => row.join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -204,6 +298,7 @@ const Payments = () => {
   const formatDate = (date) => new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
   return (
+    <div className="space-y-6 p-6 bg-[#090909] min-h-screen text-white">
     <div className="space-y-6 p-6 bg-[#090909] min-h-screen text-white">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -414,7 +509,9 @@ const Payments = () => {
           <DialogHeader>
             <DialogTitle className="text-white">Refund Payment</DialogTitle>
             <DialogDescription className="text-gray-400">
-              Are you sure you want to refund {formatCurrency(selectedPayment?.amount || 0)} to {selectedPayment?.user}?
+              Are you sure you want to refund{" "}
+              {formatCurrency(selectedPayment?.amount || 0)} to{" "}
+              {selectedPayment?.user}?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

@@ -23,7 +23,7 @@ import {
 
 const statusColors = {
   active: "success",
-  inactive: "secondary",
+  inactive: "tertiary",
   suspended: "destructive",
 };
 

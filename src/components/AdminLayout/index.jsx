@@ -33,7 +33,7 @@ import { logout } from "@/store/features/auth/authSlice";
 import { Logo } from "../../assets/svgs";
 
 const navItems = [
-  { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  // { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/users", label: "Users", icon: UsersRound },
   { path: "/payments", label: "Payments", icon: CircleDollarSign },
 ];
@@ -48,10 +48,9 @@ const NavItem = ({ item, collapsed, onClick }) => {
       onClick={onClick}
       className={`
         flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-        ${
-          isActive
-            ? "bg-gradient-to-r from-yellow to-orange text-[#fff]"
-            : "text-light hover:text-white hover:bg-[#2a2828]"
+        ${isActive
+          ? "bg-gradient-to-r from-yellow to-orange text-[#fff]"
+          : "text-light hover:text-white hover:bg-[#2a2828]"
         }
         ${collapsed ? "justify-center" : ""}
       `}
@@ -92,9 +91,8 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div
-        className={`flex items-center ${
-          collapsed ? "justify-center" : "justify-between"
-        } px-4 py-5`}
+        className={`flex items-center ${collapsed ? "justify-center" : "justify-between"
+          } px-4 py-5`}
       >
         {!collapsed && (
           <div className="flex items-center gap-2">
@@ -113,16 +111,14 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
           variant="ghost"
           size="icon"
           onClick={() => setCollapsed?.(!collapsed)}
-          className={`hidden lg:flex text-light hover:text-black ${
-            collapsed
-              ? "absolute -right-3 top-6 bg-[#1a1818] border border-[#363A42] rounded-full w-6 h-6 p-0"
-              : ""
-          }`}
+          className={`hidden lg:flex text-light hover:text-black ${collapsed
+            ? "absolute -right-3 top-6 bg-[#1a1818] border border-[#363A42] rounded-full w-6 h-6 p-0"
+            : ""
+            }`}
         >
           <ChevronLeft
-            className={`w-4 h-4 transition-transform ${
-              collapsed ? "rotate-180" : ""
-            }`}
+            className={`w-4 h-4 transition-transform ${collapsed ? "rotate-180" : ""
+              }`}
           />
         </Button>
       </div>
@@ -149,9 +145,8 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className={`w-full py-7 ${
-                collapsed ? "p-0 h-auto" : "justify-start"
-              } text-light hover:text-white hover:bg-[#2a2828] h-10`}
+              className={`w-full py-7 ${collapsed ? "p-0 h-auto" : "justify-start"
+                } text-light hover:text-white hover:bg-[#2a2828] h-10`}
             >
               <Avatar className="w-8 h-8">
                 <AvatarImage src={user?.avatar} />

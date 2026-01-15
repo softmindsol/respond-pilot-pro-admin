@@ -112,7 +112,9 @@ const Dashboard = () => {
         <StatCard
           title="Growth Rate"
           value={`${stats.growthRate}%`}
+          change={stats.growthRate}
           icon={TrendingUp}
+          trend="up"
 
         />
       </div>

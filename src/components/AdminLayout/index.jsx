@@ -204,7 +204,7 @@ const AdminLayout = () => {
       <aside
         className={`
           hidden lg:flex flex-col bg-[#1a1818] border-r border-[#363A42] transition-all duration-300 relative
-          ${collapsed ? "w-[70px]" : "w-[250px]"}
+          ${collapsed ? "w-[70px]" : "w-[240px]"}
         `}
       >
         <SidebarContent collapsed={collapsed} setCollapsed={setCollapsed} />
@@ -226,27 +226,17 @@ const AdminLayout = () => {
         <header className="h-16 bg-[#1a1818] border-b border-[#2a2828] flex items-center justify-between px-4 lg:px-6">
           <div className="flex items-center gap-4">
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               onClick={() => setMobileOpen(true)}
               className="lg:hidden"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="size-[22px]" />
             </Button>
-            <img className="w-32 mx-auto" src={Logo} alt="Respond_Pilot_Pro" />
+            <img className="w-28 mx-auto" src={Logo} alt="Respond_Pilot_Pro" />
           </div>
 
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-gray-400 hover:text-black relative"
-            >
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 right-2 w-2 h-2 bg-[#FEC36D] rounded-full" />
-            </Button>
-
-            <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-[#2a2828]">
+            <div className="flex items-center gap-2 pl-3 border-l border-[#2a2828]">
               <Avatar className="w-8 h-8">
                 <AvatarImage src={user?.avatar} />
                 <AvatarFallback className="bg-gradient-to-r from-[#FEC36D] to-[#D78001] text-white text-sm">
@@ -257,7 +247,6 @@ const AdminLayout = () => {
                 {user?.name || "Admin"}
               </span>
             </div>
-          </div>
         </header>
 
         {/* Page Content */}

@@ -87,7 +87,7 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           title="Total Users"
           value={formatNumber(stats.totalUsers)}
@@ -118,9 +118,9 @@ const Dashboard = () => {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 xl:gap-6 gap-4">
         {/* Revenue Chart */}
-        <Card className="lg:col-span-2 bg-[#1a1818] border-[#363A42]">
+        <Card className="xl:col-span-2 bg-[#1a1818] border-[#363A42]">
           <CardHeader>
             <CardTitle className="text-white">Revenue Overview</CardTitle>
             <CardDescription className="text-gray-400">
@@ -205,14 +205,14 @@ const Dashboard = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="grid grid-cols-2 gap-2 mt-4">
+            <div className="grid xl:grid-cols-2 md:grid-cols-5 grid-cols-2 gap-2 mt-4">
               {subscriptionData.map((item) => (
                 <div key={item.name} className="flex items-center gap-2">
                   <div
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-sm text-gray-400">{item.name}</span>
+                  <span className="text-sm text-light whitespace-nowrap">{item.name}</span>
                 </div>
               ))}
             </div>

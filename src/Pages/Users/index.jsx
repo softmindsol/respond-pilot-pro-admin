@@ -17,6 +17,13 @@ import { useUsersTable } from "@/hooks/useUsersTable";
 import { getInitials, formatDate } from "@/utils/formatters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectValue,
+  SelectItem,
+  SelectContent,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -36,7 +43,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
 const Users = () => {
   const {
     search,
@@ -50,12 +56,10 @@ const Users = () => {
     planFilter,
     setPlanFilter,
     statusFilter,
-    setStatusFilter
+    setStatusFilter,
   } = useUsersTable();
 
   // Helper Functions
-
-
 
   const getTierBadge = (tier) => {
     switch (tier) {
@@ -89,7 +93,9 @@ const Users = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white">Users Management</h1>
-          <p className="text-gray-400 text-sm">Manage Founding Partners and Affiliates</p>
+          <p className="text-gray-400 text-sm">
+            Manage Founding Partners and Affiliates
+          </p>
         </div>
       </div>
       {/* Filters */}

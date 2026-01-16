@@ -69,8 +69,13 @@ const paymentSlice = createSlice({
             })
             .addCase(confirmPayout.fulfilled, (state, action) => {
                 state.processingPayoutId = null;
-                // Optionally remove the paid user from the list or we can re-fetch
+                // Remove the paid user from the list
                 state.payouts = state.payouts.filter(p => p._id !== action.payload.userId);
+                
+                // Update pending payouts stats immediately
+                if (state.stats) {
+                    state.stats.pendingPayouts = Math.max(0, state.stats.pendingPayouts - (action.meta.arg.amount || 0));
+                }
             })
             .addCase(confirmPayout.rejected, (state, action) => {
                 state.processingPayoutId = null;

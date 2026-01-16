@@ -20,7 +20,7 @@ export const usePaymentTable = (activeTab) => {
         transactions,
         loadingTransactions,
         totalPages,
-        stats, // stats from Redux
+        stats, 
         loadingStats
     } = useSelector((state) => state.payments);
 

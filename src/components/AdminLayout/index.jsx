@@ -263,6 +263,7 @@ const AdminLayout = () => {
                 {user?.name || "Admin"}
               </span>
             </div>
+          </div>
         </header>
 
         {/* Page Content */}

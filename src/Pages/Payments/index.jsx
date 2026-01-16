@@ -162,8 +162,16 @@ const Payments = () => {
   } = usePaymentTable(activeTab);
 
   // --- CUSTOM HOOK: PAYOUTS ---
-  const { payouts, loadingPayouts, processingPayoutId, handleMarkAsPaid } =
-    usePayouts(activeTab);
+  const {
+    payouts,
+    loadingPayouts,
+    processingPayoutId,
+    handleMarkAsPaid,
+    payoutDialog,
+    setPayoutDialog,
+    selectedPayoutUser,
+    confirmPayoutAction,
+  } = usePayouts(activeTab);
 
   return (
     <div className="space-y-6 p-6 bg-[#090909] min-h-screen text-white">
@@ -563,6 +571,40 @@ const Payments = () => {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* --- Payout Confirmation Dialog --- */}
+      <Dialog open={payoutDialog} onOpenChange={setPayoutDialog}>
+        <DialogContent className="bg-[#1a1818] border-[#2a2828]">
+          <DialogHeader>
+            <DialogTitle className="text-white">Confirm Payout</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Are you sure you want to mark paid{" "}
+              {selectedPayoutUser &&
+                formatCurrency(selectedPayoutUser.walletBalance)}{" "}
+              to {selectedPayoutUser?.name}?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setPayoutDialog(false)}
+              className="border-[#2a2828] text-gray-300"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmPayoutAction}
+              className="bg-green-600 hover:bg-green-700 text-white"
+              disabled={processingPayoutId === selectedPayoutUser?._id}
+            >
+              {processingPayoutId === selectedPayoutUser?._id && (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              )}
+              Confirm Payout
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

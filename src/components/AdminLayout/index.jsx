@@ -1,14 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchUserProfile } from "@/store/features/auth/authActions";
 import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  LayoutDashboard,
   Settings,
   LogOut,
   Menu,
-  X,
   ChevronLeft,
-  Bell,
   CircleDollarSign,
   UsersRound,
 } from "lucide-react";
@@ -48,9 +46,10 @@ const NavItem = ({ item, collapsed, onClick }) => {
       onClick={onClick}
       className={`
         flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-        ${isActive
-          ? "bg-gradient-to-r from-yellow to-orange text-[#fff]"
-          : "text-light hover:text-white hover:bg-[#2a2828]"
+        ${
+          isActive
+            ? "bg-gradient-to-r from-yellow to-orange text-[#fff]"
+            : "text-light hover:text-white hover:bg-[#2a2828]"
         }
         ${collapsed ? "justify-center" : ""}
       `}
@@ -91,8 +90,9 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div
-        className={`flex items-center ${collapsed ? "justify-center" : "justify-between"
-          } px-4 py-5`}
+        className={`flex items-center ${
+          collapsed ? "justify-center" : "justify-between"
+        } px-4 py-5`}
       >
         {!collapsed && (
           <div className="flex items-center gap-2">
@@ -111,14 +111,16 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
           variant="ghost"
           size="icon"
           onClick={() => setCollapsed?.(!collapsed)}
-          className={`hidden lg:flex text-light hover:text-black ${collapsed
-            ? "absolute -right-3 top-6 bg-[#1a1818] border border-[#363A42] rounded-full w-6 h-6 p-0"
-            : ""
-            }`}
+          className={`hidden lg:flex text-light hover:text-black ${
+            collapsed
+              ? "absolute -right-3 top-6 bg-[#1a1818] border border-[#363A42] rounded-full w-6 h-6 p-0"
+              : ""
+          }`}
         >
           <ChevronLeft
-            className={`w-4 h-4 transition-transform ${collapsed ? "rotate-180" : ""
-              }`}
+            className={`w-4 h-4 transition-transform ${
+              collapsed ? "rotate-180" : ""
+            }`}
           />
         </Button>
       </div>
@@ -145,8 +147,9 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className={`w-full py-7 ${collapsed ? "p-0 h-auto" : "justify-start"
-                } text-light hover:text-white hover:bg-[#2a2828] h-10`}
+              className={`w-full py-7 ${
+                collapsed ? "p-0 h-auto" : "justify-start"
+              } text-light hover:text-white hover:bg-[#2a2828] h-10`}
             >
               <Avatar className="w-8 h-8">
                 <AvatarImage src={user?.avatar} />
@@ -192,6 +195,23 @@ const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Fetch profile on mount and on route change
+    dispatch(fetchUserProfile());
+
+    // Fetch profile on window focus (browser tab switch)
+    const handleFocus = () => {
+      dispatch(fetchUserProfile());
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [dispatch, location.pathname]);
 
   return (
     <div className="flex h-screen bg-[#0f0d0d]">
@@ -231,7 +251,8 @@ const AdminLayout = () => {
             <img className="w-28 mx-auto" src={Logo} alt="Respond_Pilot_Pro" />
           </div>
 
-            <div className="flex items-center gap-2 pl-3 border-l border-[#2a2828]">
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-[#2a2828]">
               <Avatar className="w-8 h-8">
                 <AvatarImage src={user?.avatar} />
                 <AvatarFallback className="bg-gradient-to-r from-[#FEC36D] to-[#D78001] text-white text-sm">

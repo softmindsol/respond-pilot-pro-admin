@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/tooltip";
 import { logout } from "@/store/features/auth/authSlice";
 import { Logo } from "../../assets/svgs";
+import { SettingsModal } from "@/components/SettingsComponents";
 
 const navItems = [
   // { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -76,7 +77,7 @@ const NavItem = ({ item, collapsed, onClick }) => {
   return content;
 };
 
-const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
+const SidebarContent = ({ collapsed, setCollapsed, onNavigate, onOpenSettings }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -174,7 +175,10 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
             side={collapsed ? "right" : "top"}
             className="w-56 bg-[#1a1818] border-[#363A42]"
           >
-            <DropdownMenuItem className="text-light focus:text-white focus:bg-[#2a2828]">
+            <DropdownMenuItem 
+              onClick={onOpenSettings}
+              className="text-light focus:text-white focus:bg-[#2a2828] cursor-pointer"
+            >
               <Settings className="w-4 h-4 mr-2 text-light" /> Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-[#363A42]" />
@@ -194,6 +198,7 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -222,7 +227,11 @@ const AdminLayout = () => {
           ${collapsed ? "w-[70px]" : "w-[240px]"}
         `}
       >
-        <SidebarContent collapsed={collapsed} setCollapsed={setCollapsed} />
+        <SidebarContent 
+          collapsed={collapsed} 
+          setCollapsed={setCollapsed} 
+          onOpenSettings={() => setSettingsOpen(true)}
+        />
       </aside>
 
       {/* Mobile Sidebar */}
@@ -231,7 +240,13 @@ const AdminLayout = () => {
           side="left"
           className="w-[280px] p-0 bg-[#1a1818] border-[#2a2828]"
         >
-          <SidebarContent onNavigate={() => setMobileOpen(false)} />
+          <SidebarContent 
+            onNavigate={() => setMobileOpen(false)} 
+            onOpenSettings={() => {
+              setMobileOpen(false);
+              setSettingsOpen(true);
+            }}
+          />
         </SheetContent>
       </Sheet>
 
@@ -271,6 +286,13 @@ const AdminLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal 
+        open={settingsOpen} 
+        onOpenChange={setSettingsOpen} 
+        user={user} 
+      />
     </div>
   );
 };

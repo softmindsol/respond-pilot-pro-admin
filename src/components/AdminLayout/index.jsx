@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/tooltip";
 import { logout } from "@/store/features/auth/authSlice";
 import { Logo } from "../../assets/svgs";
+import { SettingsModal } from "@/components/SettingsComponents";
 
 const navItems = [
   // { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -76,7 +77,7 @@ const NavItem = ({ item, collapsed, onClick }) => {
   return content;
 };
 
-const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
+const SidebarContent = ({ collapsed, setCollapsed, onNavigate, onOpenSettings }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -174,7 +175,10 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
             side={collapsed ? "right" : "top"}
             className="w-56 bg-[#1a1818] border-[#363A42]"
           >
-            <DropdownMenuItem className="text-light focus:text-white focus:bg-[#2a2828]">
+            <DropdownMenuItem 
+              onClick={onOpenSettings}
+              className="text-light focus:text-white focus:bg-[#2a2828] cursor-pointer"
+            >
               <Settings className="w-4 h-4 mr-2 text-light" /> Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-[#363A42]" />
@@ -194,6 +198,7 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate }) => {
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -219,10 +224,14 @@ const AdminLayout = () => {
       <aside
         className={`
           hidden lg:flex flex-col bg-[#1a1818] border-r border-[#363A42] transition-all duration-300 relative
-          ${collapsed ? "w-[70px]" : "w-[250px]"}
+          ${collapsed ? "w-[70px]" : "w-[240px]"}
         `}
       >
-        <SidebarContent collapsed={collapsed} setCollapsed={setCollapsed} />
+        <SidebarContent 
+          collapsed={collapsed} 
+          setCollapsed={setCollapsed} 
+          onOpenSettings={() => setSettingsOpen(true)}
+        />
       </aside>
 
       {/* Mobile Sidebar */}
@@ -231,7 +240,13 @@ const AdminLayout = () => {
           side="left"
           className="w-[280px] p-0 bg-[#1a1818] border-[#2a2828]"
         >
-          <SidebarContent onNavigate={() => setMobileOpen(false)} />
+          <SidebarContent 
+            onNavigate={() => setMobileOpen(false)} 
+            onOpenSettings={() => {
+              setMobileOpen(false);
+              setSettingsOpen(true);
+            }}
+          />
         </SheetContent>
       </Sheet>
 
@@ -241,14 +256,14 @@ const AdminLayout = () => {
         <header className="h-16 bg-[#1a1818] border-b border-[#2a2828] flex items-center justify-between px-4 lg:px-6">
           <div className="flex items-center gap-4">
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               onClick={() => setMobileOpen(true)}
               className="lg:hidden"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="size-[22px]" />
             </Button>
-            <img className="w-32 mx-auto" src={Logo} alt="Respond_Pilot_Pro" />
+            <img className="w-28 mx-auto" src={Logo} alt="Respond_Pilot_Pro" />
           </div>
 
           <div className="flex items-center gap-3">
@@ -271,6 +286,13 @@ const AdminLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal 
+        open={settingsOpen} 
+        onOpenChange={setSettingsOpen} 
+        user={user} 
+      />
     </div>
   );
 };

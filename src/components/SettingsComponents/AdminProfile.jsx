@@ -1,17 +1,21 @@
 import { useState, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { Loader2, Pencil, Check, X, Camera } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useUpdateProfileMutation } from "@/store/api/authApi";
+import { fetchUserProfile } from "@/store/features/auth/authActions";
 
 const AdminProfile = ({ user }) => {
+  const dispatch = useDispatch();
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(user?.name || "");
   const [error, setError] = useState("");
 
+  console.log(user?.profileImage);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [avatarError, setAvatarError] = useState("");
@@ -37,6 +41,7 @@ const AdminProfile = ({ user }) => {
 
     try {
       await updateProfile({ name: name.trim() }).unwrap();
+      dispatch(fetchUserProfile()); // Refresh profile data
       setIsEditing(false);
       setError("");
     } catch (err) {
@@ -78,6 +83,7 @@ const AdminProfile = ({ user }) => {
       formData.append("profileImage", file);
 
       await updateProfile(formData).unwrap();
+      dispatch(fetchUserProfile()); // Refresh profile data
       setAvatarPreview(null);
     } catch (err) {
       setAvatarError(err?.data?.message || "Failed to update avatar");
@@ -96,7 +102,17 @@ const AdminProfile = ({ user }) => {
       <div className="flex items-center gap-4">
         <div className="relative group">
           <Avatar className="w-16 h-16">
-            <AvatarImage src={avatarPreview || user?.profileImage} />
+            <AvatarImage
+              src={
+                avatarPreview
+                  ? avatarPreview
+                  : user?.profileImage
+                    ? user.profileImage.startsWith("http")
+                      ? user.profileImage
+                      : `${import.meta.env.VITE_PROFILE_FETCH}${user.profileImage}`
+                    : null
+              }
+            />
             <AvatarFallback className="bg-gradient-to-r from-orange to-yellow text-white text-xl">
               {user?.name?.charAt(0) || "A"}
             </AvatarFallback>

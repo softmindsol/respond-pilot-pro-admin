@@ -28,7 +28,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { logout } from "@/store/features/auth/authSlice";
-import { Logo } from "../../assets/svgs";
+import { Logo,Favicon } from "../../assets/svgs";
 import { SettingsModal } from "@/components/SettingsComponents";
 
 const navItems = [
@@ -103,14 +103,14 @@ const SidebarContent = ({
         {!collapsed && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-r from-yellow to-orange rounded-md flex items-center justify-center">
-              <img src="/public/favicon.svg" alt="rpp" />
+              <img src={Favicon} alt="rpp" />
             </div>
             <span className="font-bold text-white">Admin Panel</span>
           </div>
         )}
         {collapsed && (
           <div className="w-8 h-8 bg-gradient-to-r from-[#FEC36D] to-[#D78001] rounded-lg flex items-center justify-center">
-            <img src="/public/favicon.svg" alt="rpp" />
+            <img src={Favicon} alt="rpp" />
           </div>
         )}
         <Button

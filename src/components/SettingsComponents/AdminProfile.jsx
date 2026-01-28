@@ -14,8 +14,6 @@ const AdminProfile = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(user?.name || "");
   const [error, setError] = useState("");
-
-  console.log(user?.profileImage);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [avatarError, setAvatarError] = useState("");

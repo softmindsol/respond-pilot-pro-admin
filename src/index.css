@@ -30,6 +30,28 @@
   --color-red: #ff0000;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* track (background) */
+::-webkit-scrollbar-track {
+  background: #2e2e2e;
+}
+
+/* thumb (jo move hota hai) */
+::-webkit-scrollbar-thumb {
+  background: #d78001;
+}
+
+/* hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background: #fec36d;
+}
+
+
 .primary-gradient {
   background: linear-gradient(to left, #FEC36D, #D78001);
 }

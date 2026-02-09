@@ -28,7 +28,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { logout } from "@/store/features/auth/authSlice";
-import { Logo } from "../../assets/svgs";
+import { Logo,Favicon } from "../../assets/svgs";
 import { SettingsModal } from "@/components/SettingsComponents";
 
 const navItems = [
@@ -77,7 +77,12 @@ const NavItem = ({ item, collapsed, onClick }) => {
   return content;
 };
 
-const SidebarContent = ({ collapsed, setCollapsed, onNavigate, onOpenSettings }) => {
+const SidebarContent = ({
+  collapsed,
+  setCollapsed,
+  onNavigate,
+  onOpenSettings,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -98,14 +103,14 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate, onOpenSettings })
         {!collapsed && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-r from-yellow to-orange rounded-md flex items-center justify-center">
-              <img src="/public/favicon.svg" alt="rpp" />
+              <img src={Favicon} alt="rpp" />
             </div>
             <span className="font-bold text-white">Admin Panel</span>
           </div>
         )}
         {collapsed && (
           <div className="w-8 h-8 bg-gradient-to-r from-[#FEC36D] to-[#D78001] rounded-lg flex items-center justify-center">
-            <img src="/public/favicon.svg" alt="rpp" />
+            <img src={Favicon} alt="rpp" />
           </div>
         )}
         <Button
@@ -153,7 +158,17 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate, onOpenSettings })
               } text-light hover:text-white hover:bg-[#2a2828] h-10`}
             >
               <Avatar className="w-8 h-8">
-                <AvatarImage src={user?.avatar} />
+                <AvatarImage
+                  src={
+                    user?.profileImage
+                      ? user.profileImage.startsWith("http")
+                        ? user.profileImage
+                        : `${import.meta.env.VITE_PROFILE_FETCH}${
+                            user.profileImage
+                          }`
+                      : null
+                  }
+                />
                 <AvatarFallback className="bg-gradient-to-r from-[#FEC36D] to-[#D78001] text-white text-sm">
                   {user?.name?.charAt(0) || "A"}
                 </AvatarFallback>
@@ -175,7 +190,7 @@ const SidebarContent = ({ collapsed, setCollapsed, onNavigate, onOpenSettings })
             side={collapsed ? "right" : "top"}
             className="w-56 bg-[#1a1818] border-[#363A42]"
           >
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={onOpenSettings}
               className="text-light focus:text-white focus:bg-[#2a2828] cursor-pointer"
             >
@@ -227,9 +242,9 @@ const AdminLayout = () => {
           ${collapsed ? "w-[70px]" : "w-[240px]"}
         `}
       >
-        <SidebarContent 
-          collapsed={collapsed} 
-          setCollapsed={setCollapsed} 
+        <SidebarContent
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
           onOpenSettings={() => setSettingsOpen(true)}
         />
       </aside>
@@ -240,8 +255,8 @@ const AdminLayout = () => {
           side="left"
           className="w-[280px] p-0 bg-[#1a1818] border-[#2a2828]"
         >
-          <SidebarContent 
-            onNavigate={() => setMobileOpen(false)} 
+          <SidebarContent
+            onNavigate={() => setMobileOpen(false)}
             onOpenSettings={() => {
               setMobileOpen(false);
               setSettingsOpen(true);
@@ -269,7 +284,17 @@ const AdminLayout = () => {
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-[#2a2828]">
               <Avatar className="w-8 h-8">
-                <AvatarImage src={user?.avatar} />
+                <AvatarImage
+                  src={
+                    user?.profileImage
+                      ? user.profileImage.startsWith("http")
+                        ? user.profileImage
+                        : `${import.meta.env.VITE_PROFILE_FETCH}${
+                            user.profileImage
+                          }`
+                      : null
+                  }
+                />
                 <AvatarFallback className="bg-gradient-to-r from-[#FEC36D] to-[#D78001] text-white text-sm">
                   {user?.name?.charAt(0) || "A"}
                 </AvatarFallback>
@@ -288,10 +313,10 @@ const AdminLayout = () => {
       </div>
 
       {/* Settings Modal */}
-      <SettingsModal 
-        open={settingsOpen} 
-        onOpenChange={setSettingsOpen} 
-        user={user} 
+      <SettingsModal
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        user={user}
       />
     </div>
   );

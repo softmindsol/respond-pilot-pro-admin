@@ -89,8 +89,8 @@ const Users = () => {
   };
 
   return (
-    <ScrollArea className="h-full w-full">
-      <div className="space-y-6 mr-8 bg-[#0f0d0d] min-h-screen text-white">
+    <>
+      <div className="space-y-6 bg-[#0f0d0d] min-h-screen text-white">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -293,7 +293,7 @@ const Users = () => {
           </div>
         </div>
       </div>
-    </ScrollArea>
+    </>
   );
 };
 

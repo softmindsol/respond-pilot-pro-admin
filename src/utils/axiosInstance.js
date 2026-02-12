@@ -19,12 +19,23 @@ axiosInstance.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
+let store = null;
+let logoutAction = null;
+
+export const injectStore = (_store, _logoutAction) => {
+    store = _store;
+    logoutAction = _logoutAction;
+};
+
 // Response Interceptor: Handle Errors (Optional: auto-logout on 401)
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        // If 401 Unauthorized, maybe clear token? 
-        // Leaving it for the thunks to handle for now.
+        if (error.response && error.response.status === 401) {
+            if (store && logoutAction) {
+                store.dispatch(logoutAction());
+            }
+        }
         return Promise.reject(error);
     }
 );

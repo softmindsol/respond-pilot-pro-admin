@@ -46,3 +46,4 @@ const ModalFallback = ({ error, resetErrorBoundary, onClose }) => {
 };
 
 export default ModalFallback;
+ 

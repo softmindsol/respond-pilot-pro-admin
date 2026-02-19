@@ -59,6 +59,16 @@ export const useUsersTable = () => {
         }
     };
 
+    const updatePlanFilter = (value) => {
+        setPlanFilter(value);
+        setPage(1);
+    };
+
+    const updateStatusFilter = (value) => {
+        setStatusFilter(value);
+        setPage(1);
+    };
+
     return {
         // State
         search,
@@ -66,9 +76,9 @@ export const useUsersTable = () => {
         page,
         setPage,
         planFilter,
-        setPlanFilter,
+        setPlanFilter: updatePlanFilter,
         statusFilter,
-        setStatusFilter,
+        setStatusFilter: updateStatusFilter,
 
         // Data
         users,
